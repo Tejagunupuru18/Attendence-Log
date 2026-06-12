@@ -55,4 +55,4 @@ StudentApp/
 
 ## License
 
-MIT License — free to use and modify.
+ License — free to use and modify.

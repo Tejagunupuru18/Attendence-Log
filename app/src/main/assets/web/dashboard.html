@@ -128,6 +128,9 @@
             <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">TimeFlow</h1>
         </div>
         <div class="flex items-center gap-3">
+            <a href="export.html" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-primary text-[20px]">download</span>
+            </a>
             <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-sm">TF</div>
         </div>
     </header>
@@ -220,41 +223,86 @@
         // Start live clock
         renderClock('live-clock');
 
-        // Load Dynamic Data
+        // ── Helpers ──────────────────────────────────────────────────
+        const DAY_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        const DAY_FULL  = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+        function toMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const parts = timeStr.trim().split(' ');
+            const tp = parts[0].split(':');
+            let h = parseInt(tp[0]), m = parseInt(tp[1]);
+            const pm = parts[1] && parts[1].toLowerCase() === 'pm';
+            if (pm && h !== 12) h += 12;
+            if (!pm && h === 12) h = 0;
+            return h * 60 + m;
+        }
+
+        function nowMinutes() {
+            const n = new Date();
+            return n.getHours() * 60 + n.getMinutes();
+        }
+
+        // Find the next upcoming class across the whole week
+        // Returns { cls, daysFromNow, minutesFromNow } or null
+        function findNextClass(timetable) {
+            if (!timetable.length) return null;
+            const now     = new Date();
+            const todayIdx = now.getDay(); // 0=Sun
+            const nowMins  = nowMinutes();
+
+            // Check up to 7 days ahead
+            for (let d = 0; d < 7; d++) {
+                const dayIdx = (todayIdx + d) % 7;
+                const dayStr = DAY_NAMES[dayIdx];
+                const dayClasses = timetable
+                    .filter(c => c.day === dayStr)
+                    .sort((a,b) => toMinutes(a.startTime) - toMinutes(b.startTime));
+
+                for (const cls of dayClasses) {
+                    const startMins = toMinutes(cls.startTime);
+                    if (d === 0 && startMins <= nowMins) continue; // already started today
+                    return { cls, daysFromNow: d, minutesFromNow: d === 0 ? startMins - nowMins : null };
+                }
+            }
+            return null;
+        }
+
+        function formatCountdown(daysFromNow, minutesFromNow, cls) {
+            if (daysFromNow === 0 && minutesFromNow !== null) {
+                if (minutesFromNow <= 0)   return { text: 'Starting now!', pulse: true };
+                if (minutesFromNow < 60)   return { text: `Starts in ${minutesFromNow} min`, pulse: true };
+                const hrs = Math.floor(minutesFromNow / 60);
+                const mins = minutesFromNow % 60;
+                return { text: `Starts in ${hrs}h ${mins > 0 ? mins + 'm' : ''}`.trim(), pulse: true };
+            }
+            if (daysFromNow === 1) return { text: `Tomorrow · ${cls.startTime}`, pulse: false };
+            return { text: `${DAY_FULL[(new Date().getDay() + daysFromNow) % 7]} · ${cls.startTime}`, pulse: false };
+        }
+
+        // ── Main dashboard loader ─────────────────────────────────────
         function loadDashboard() {
-            // Calculate standing
+            // ── Attendance standing ───────────────────────────────────
             const attendance = AttendanceManager.getAttendance();
-            let totalAttended = 0;
-            let totalClasses = 0;
-            let bunkableCount = 0;
+            let totalAttended = 0, totalClasses = 0, bunkableCount = 0;
 
             attendance.forEach(subject => {
                 totalAttended += subject.attended;
-                totalClasses += subject.total;
-                
-                // Estimate safe bunks
-                // Formula: to maintain required %, we find how many we can miss.
-                // attended / (total + bunks) >= required%
-                // attended >= required% * (total + bunks) => bunks <= (attended / required%) - total
+                totalClasses  += subject.total;
                 const pct = subject.required / 100;
                 if (subject.total > 0) {
-                    const currentPct = (subject.attended / subject.total);
+                    const currentPct = subject.attended / subject.total;
                     if (currentPct >= pct) {
                         const maxBunks = Math.floor(subject.attended / pct) - subject.total;
-                        if (maxBunks > 0) {
-                            bunkableCount += maxBunks;
-                        }
+                        if (maxBunks > 0) bunkableCount += maxBunks;
                     }
-                } else {
-                    // Default safe bunk if no classes held yet
-                    bunkableCount += 1;
                 }
             });
 
             const avgPct = totalClasses > 0 ? Math.round((totalAttended / totalClasses) * 100) : 0;
             document.getElementById('attendance-pct').innerText = totalClasses > 0 ? `${avgPct}%` : '--';
             document.getElementById('attendance-ring').setAttribute('stroke-dasharray', `${avgPct}, 100`);
-            
+
             const attendanceStatus = document.getElementById('attendance-status');
             if (totalClasses === 0) {
                 attendanceStatus.innerText = "No data yet";
@@ -266,56 +314,110 @@
                 attendanceStatus.innerText = "Low Attendance!";
                 attendanceStatus.className = "font-label-sm text-label-sm text-error font-bold";
             }
-
             document.getElementById('bunk-count').innerText = bunkableCount;
 
-            // Get Current Schedule for Today
-            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            const todayDay = days[new Date().getDay()];
-            const timetable = TimetableManager.getClasses();
-            
-            // Filter classes for today
-            const todayClasses = timetable.filter(c => c.day === todayDay || (todayDay === "Sun" && c.day === "Mon")); // Seed/fall back to Mon if weekend
-            
-            const upcomingList = document.getElementById('upcoming-list');
+            // ── Today's classes ───────────────────────────────────────
+            const timetable  = TimetableManager.getClasses();
+            const todayStr   = DAY_NAMES[new Date().getDay()];
+            const nowMins    = nowMinutes();
+
+            // All today's classes sorted
+            const todayAll = timetable
+                .filter(c => c.day === todayStr)
+                .sort((a,b) => toMinutes(a.startTime) - toMinutes(b.startTime));
+
+            // Split into ongoing/upcoming vs finished
+            const remaining = todayAll.filter(c => toMinutes(c.endTime || c.startTime) > nowMins);
+            const finished  = todayAll.filter(c => toMinutes(c.endTime || c.startTime) <= nowMins);
+
+            // ── Next class card ───────────────────────────────────────
             const nextClassCardName = document.getElementById('next-class-name');
-            const nextClassDetails = document.getElementById('next-class-details');
-            const countdownBadge = document.getElementById('countdown-badge');
+            const nextClassDetails  = document.getElementById('next-class-details');
+            const countdownBadge    = document.getElementById('countdown-badge');
 
-            if (todayClasses.length > 0) {
-                // Sort classes by time
-                todayClasses.sort((a,b) => a.startTime.localeCompare(b.startTime));
+            const nextResult = findNextClass(timetable);
 
-                // Find next class (for simulation, pick first one)
-                const nextCls = todayClasses[0];
-                nextClassCardName.innerText = nextCls.subject;
-                nextClassDetails.innerText = `${nextCls.room} • ${nextCls.instructor}`;
-                countdownBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-primary-fixed-dim"></span><span class="font-label-md text-label-md">Starts in 8 mins</span>`;
-
-                // Render list
-                upcomingList.innerHTML = todayClasses.map(c => `
-                    <div class="bg-white rounded-xl p-md flex items-center gap-md shadow-[0_4px_20px_rgba(21,21,125,0.04)] border-l-4 ${c.color === 'secondary' ? 'border-secondary' : c.color === 'tertiary' ? 'border-tertiary' : 'border-primary'}">
-                        <div class="flex flex-col items-center min-w-[60px]">
-                            <span class="font-label-md text-primary font-semibold">${c.startTime.split(' ')[0]}</span>
-                            <span class="font-label-sm text-on-surface-variant">${c.startTime.split(' ')[1]}</span>
-                        </div>
-                        <div class="flex-grow">
-                            <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">${c.subject}</h4>
-                            <p class="font-body-md text-on-surface-variant">${c.room} • ${c.instructor}</p>
-                        </div>
-                        <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
-                    </div>
-                `).join('');
+            if (nextResult) {
+                const { cls, daysFromNow, minutesFromNow } = nextResult;
+                const cd = formatCountdown(daysFromNow, minutesFromNow, cls);
+                nextClassCardName.innerText = cls.subject;
+                nextClassDetails.innerText  = cls.startTime + ' – ' + cls.endTime;
+                countdownBadge.innerHTML = `
+                    <span class="w-2 h-2 rounded-full bg-primary-fixed-dim ${cd.pulse ? 'animate-pulse' : ''}"></span>
+                    <span class="font-label-md text-label-md">${cd.text}</span>`;
+            } else if (timetable.length === 0) {
+                nextClassCardName.innerText = "No classes added yet";
+                nextClassDetails.innerText  = "Go to Schedule to add your classes";
+                countdownBadge.innerHTML    = `<span class="font-label-md text-label-md">Setup needed</span>`;
             } else {
-                nextClassCardName.innerText = "No classes remaining today";
-                nextClassDetails.innerText = "Enjoy your free time!";
-                countdownBadge.innerHTML = `<span class="font-label-md text-label-md">Off-Duty</span>`;
-                upcomingList.innerHTML = `<p class="text-center py-6 text-on-surface-variant text-body-md">No classes scheduled today.</p>`;
+                nextClassCardName.innerText = "All done for the week!";
+                nextClassDetails.innerText  = "No more classes this week";
+                countdownBadge.innerHTML    = `<span class="font-label-md text-label-md">Free time 🎉</span>`;
             }
+
+            // ── Upcoming list (today only) ────────────────────────────
+            const upcomingList = document.getElementById('upcoming-list');
+
+            if (todayAll.length === 0) {
+                // No classes today — show next class day info
+                const next = findNextClass(timetable);
+                if (next) {
+                    const dayName = DAY_FULL[(new Date().getDay() + next.daysFromNow) % 7];
+                    upcomingList.innerHTML = `
+                        <div class="flex flex-col items-center py-6 gap-sm text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined text-4xl">event</span>
+                            <p class="font-label-md">No classes today.</p>
+                            <p class="font-label-sm">Next class: <span class="text-primary font-bold">${next.cls.subject}</span> on <span class="font-bold">${dayName}</span> at ${next.cls.startTime}</p>
+                        </div>`;
+                } else {
+                    upcomingList.innerHTML = `<p class="text-center py-6 text-on-surface-variant text-body-md">No classes scheduled.</p>`;
+                }
+                return;
+            }
+
+            // Render all today's classes — mark status
+            upcomingList.innerHTML = todayAll.map(c => {
+                const startMins = toMinutes(c.startTime);
+                const endMins   = toMinutes(c.endTime || c.startTime);
+                const isOngoing = startMins <= nowMins && endMins > nowMins;
+                const isDone    = endMins <= nowMins;
+                const isNext    = !isDone && !isOngoing && remaining[0]?.subject === c.subject && remaining[0]?.startTime === c.startTime;
+
+                const borderCol = c.color === 'secondary' ? 'border-secondary'
+                                : c.color === 'tertiary'  ? 'border-tertiary'
+                                : c.color === 'error'     ? 'border-error'
+                                : 'border-primary';
+
+                let badge = '';
+                if (isOngoing) badge = `<span class="px-2 py-0.5 bg-secondary text-on-secondary rounded-full font-label-sm text-label-sm animate-pulse">In Progress</span>`;
+                else if (isNext) {
+                    const minsLeft = startMins - nowMins;
+                    const label = minsLeft < 60 ? `in ${minsLeft}m` : `in ${Math.floor(minsLeft/60)}h ${minsLeft%60>0?minsLeft%60+'m':''}`.trim();
+                    badge = `<span class="px-2 py-0.5 bg-primary-container text-on-primary-container rounded-full font-label-sm text-label-sm">${label}</span>`;
+                } else if (isDone) {
+                    badge = `<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant rounded-full font-label-sm text-label-sm">Done</span>`;
+                }
+
+                return `
+                <div class="bg-white rounded-xl p-md flex items-center gap-md shadow-[0_4px_20px_rgba(21,21,125,0.04)] border-l-4 ${borderCol} ${isDone ? 'opacity-50' : ''}">
+                    <div class="flex flex-col items-center min-w-[52px]">
+                        <span class="font-label-md text-primary font-semibold">${c.startTime.split(' ')[0]}</span>
+                        <span class="font-label-sm text-on-surface-variant">${c.startTime.split(' ')[1]}</span>
+                    </div>
+                    <div class="flex-grow">
+                        <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">${c.subject}</h4>
+                        <p class="font-label-sm text-on-surface-variant">${c.startTime} – ${c.endTime}</p>
+                    </div>
+                    ${badge}
+                </div>`;
+            }).join('');
         }
 
-        // Load on load
-        window.addEventListener('DOMContentLoaded', loadDashboard);
+        // Reload every minute so countdowns stay fresh
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+            setInterval(loadDashboard, 60000);
+        });
     </script>
 </body>
 </html>

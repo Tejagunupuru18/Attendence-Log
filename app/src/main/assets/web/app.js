@@ -166,11 +166,10 @@ const SubjectManager = {
     saveSubjects: (subjects) => saveData("tf_subjects", subjects),
     addSubject: (name, color = "primary", credits = 3) => {
         const subjects = SubjectManager.getSubjects();
-        if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase())) return null; // no duplicate
+        if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase())) return null;
         const s = { id: "sub_" + Date.now(), name, color, credits };
         subjects.push(s);
         SubjectManager.saveSubjects(subjects);
-        // Auto-create attendance record
         const attendance = AttendanceManager.getAttendance();
         if (!attendance.find(a => a.subject.toLowerCase() === name.toLowerCase())) {
             attendance.push({ subject: name, attended: 0, total: 0, required: 75 });
@@ -181,6 +180,38 @@ const SubjectManager = {
     deleteSubject: (id) => {
         const subjects = SubjectManager.getSubjects().filter(s => s.id !== id);
         SubjectManager.saveSubjects(subjects);
+    }
+};
+
+// ── Daily Streak ──────────────────────────────────────────────
+// Streak = consecutive calendar days on which ANY attendance was logged
+const StreakManager = {
+    STREAK_KEY:    'tf_streak_count',
+    LAST_LOG_KEY:  'tf_streak_last_date',
+
+    getStreak: () => parseInt(localStorage.getItem('tf_streak_count') || '0'),
+
+    // Call this whenever an attendance action is performed
+    logToday: () => {
+        const today     = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
+        const lastDate  = localStorage.getItem('tf_streak_last_date') || '';
+        const streak    = parseInt(localStorage.getItem('tf_streak_count') || '0');
+
+        if (lastDate === today) return streak; // already logged today
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yStr = yesterday.toISOString().substring(0, 10);
+
+        const newStreak = lastDate === yStr ? streak + 1 : 1; // consecutive or restart
+        localStorage.setItem('tf_streak_count',     newStreak);
+        localStorage.setItem('tf_streak_last_date', today);
+        return newStreak;
+    },
+
+    isLoggedToday: () => {
+        const today = new Date().toISOString().substring(0, 10);
+        return localStorage.getItem('tf_streak_last_date') === today;
     }
 };
 

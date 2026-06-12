@@ -5,231 +5,434 @@
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
     <title>TimeFlow - Attendance Tracker</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script id="tailwind-config">
         tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "surface-container": "#edeeef",
-                        "tertiary-container": "#00473b",
-                        "on-tertiary": "#ffffff",
-                        "outline-variant": "#c7c5d4",
-                        "on-secondary-fixed-variant": "#004493",
-                        "secondary-fixed": "#d8e2ff",
-                        "background": "#f8f9fa",
-                        "surface-variant": "#e1e3e4",
-                        "on-primary": "#ffffff",
-                        "surface-container-lowest": "#ffffff",
-                        "on-surface": "#191c1d",
-                        "tertiary": "#002f26",
-                        "on-secondary": "#ffffff",
-                        "on-primary-fixed-variant": "#373a9b",
-                        "on-primary-fixed": "#04006d",
-                        "error": "#ba1a1a",
-                        "surface": "#f8f9fa",
-                        "primary-container": "#2e3192",
-                        "secondary-container": "#0070ea",
-                        "inverse-primary": "#c0c1ff",
-                        "on-error-container": "#93000a",
-                        "on-background": "#191c1d",
-                        "on-tertiary-fixed-variant": "#005143",
-                        "surface-container-highest": "#e1e3e4",
-                        "primary-fixed-dim": "#c0c1ff",
-                        "on-primary-container": "#9da1ff",
-                        "on-tertiary-container": "#00bfa2",
-                        "secondary-fixed-dim": "#adc7ff",
-                        "outline": "#777683",
-                        "error-container": "#ffdad6",
-                        "secondary": "#0059bb",
-                        "surface-tint": "#4f54b4",
-                        "primary": "#15157d",
-                        "tertiary-fixed-dim": "#2cdebf",
-                        "on-secondary-fixed": "#001a41",
-                        "on-surface-variant": "#464652",
-                        "surface-bright": "#f8f9fa",
-                        "on-error": "#ffffff",
-                        "surface-container-low": "#f3f4f5",
-                        "surface-dim": "#d9dadb",
-                        "tertiary-fixed": "#58fbda",
-                        "inverse-surface": "#2e3132",
-                        "inverse-on-surface": "#f0f1f2",
-                        "surface-container-high": "#e7e8e9",
-                        "on-secondary-container": "#fefcff",
-                        "primary-fixed": "#e1e0ff",
-                        "on-tertiary-fixed": "#00201a"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "base": "4px",
-                        "sm": "8px",
-                        "md": "16px",
-                        "xs": "4px",
-                        "margin-desktop": "40px",
-                        "margin-mobile": "16px",
-                        "gutter": "12px",
-                        "xl": "32px",
-                        "lg": "24px"
-                    },
-                    "fontFamily": {
-                        "headline-sm": ["Plus Jakarta Sans"],
-                        "display-lg-mobile": ["Plus Jakarta Sans"],
-                        "body-md": ["Hanken Grotesk"],
-                        "display-lg": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "label-sm": ["Hanken Grotesk"],
-                        "body-lg": ["Hanken Grotesk"],
-                        "label-md": ["Hanken Grotesk"]
-                    },
-                    "fontSize": {
-                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "700" }],
-                        "display-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
-                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                        "display-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
-                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
-                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "700" }],
-                        "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
-                    }
+            darkMode:"class",
+            theme:{extend:{
+                colors:{
+                    "surface-container":"#edeeef","tertiary-container":"#00473b","on-tertiary":"#ffffff",
+                    "outline-variant":"#c7c5d4","background":"#f8f9fa","surface-variant":"#e1e3e4",
+                    "on-primary":"#ffffff","surface-container-lowest":"#ffffff","on-surface":"#191c1d",
+                    "tertiary":"#002f26","on-secondary":"#ffffff","error":"#ba1a1a","surface":"#f8f9fa",
+                    "primary-container":"#2e3192","secondary-container":"#0070ea","on-background":"#191c1d",
+                    "surface-container-highest":"#e1e3e4","primary-fixed-dim":"#c0c1ff",
+                    "on-primary-container":"#9da1ff","on-tertiary-container":"#00bfa2","outline":"#777683",
+                    "error-container":"#ffdad6","on-error-container":"#93000a","secondary":"#0059bb",
+                    "primary":"#15157d","tertiary-fixed-dim":"#2cdebf","on-surface-variant":"#464652",
+                    "surface-container-low":"#f3f4f5","tertiary-fixed":"#58fbda","on-secondary-container":"#fefcff",
+                    "primary-fixed":"#e1e0ff","on-tertiary-fixed":"#00201a","on-error":"#ffffff",
+                    "surface-container-high":"#e7e8e9","inverse-surface":"#2e3132","surface-dim":"#d9dadb",
+                    "on-secondary-fixed":"#001a41","secondary-fixed":"#d8e2ff","on-primary-fixed":"#04006d",
+                    "secondary-fixed-dim":"#adc7ff","on-secondary-fixed-variant":"#004493",
+                    "on-primary-fixed-variant":"#373a9b","on-tertiary-fixed-variant":"#005143",
+                    "surface-tint":"#4f54b4","inverse-primary":"#c0c1ff","inverse-on-surface":"#f0f1f2"
                 },
-            },
+                borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},
+                spacing:{"base":"4px","sm":"8px","md":"16px","xs":"4px","margin-mobile":"16px","gutter":"12px","xl":"32px","lg":"24px"},
+                fontFamily:{"headline-sm":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"],"body-md":["Hanken Grotesk"],"display-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"]},
+                fontSize:{
+                    "headline-sm":["20px",{"lineHeight":"1.4","fontWeight":"700"}],
+                    "display-lg-mobile":["28px",{"lineHeight":"1.2","fontWeight":"800"}],
+                    "body-md":["16px",{"lineHeight":"1.5","fontWeight":"400"}],
+                    "display-lg":["32px",{"lineHeight":"1.2","letterSpacing":"-0.02em","fontWeight":"800"}],
+                    "headline-md":["24px",{"lineHeight":"1.3","fontWeight":"700"}],
+                    "label-sm":["12px",{"lineHeight":"1.2","fontWeight":"700"}],
+                    "body-lg":["18px",{"lineHeight":"1.5","fontWeight":"400"}],
+                    "label-md":["14px",{"lineHeight":"1.2","letterSpacing":"0.01em","fontWeight":"600"}]
+                }
+            }}
         }
     </script>
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
+        .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+        .prediction-bar { height: 6px; border-radius: 99px; background: #e1e3e4; overflow: hidden; }
+        .prediction-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1); }
+        .pill { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:99px; font-size:11px; font-weight:700; line-height:1.4; }
+        .cutoff-chip.active { background:#15157d; color:#fff; border-color:#15157d; }
+        #cutoff-panel { transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94); }
+        #cutoff-panel.open { transform: translateX(0); }
     </style>
 </head>
 <body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
-    <!-- TopAppBar -->
+
+    <!-- Header -->
     <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-margin-mobile py-sm">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-2xl">query_stats</span>
             <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Attendance</h1>
         </div>
+        <button onclick="openCutoffPanel()" class="flex items-center gap-1 bg-surface-container px-3 py-2 rounded-xl font-label-md text-on-surface active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-primary text-[18px]">tune</span>
+            Cutoff: <span id="header-cutoff" class="text-primary font-bold">75%</span>
+        </button>
     </header>
 
-    <main class="px-margin-mobile pt-sm space-y-lg">
-        <!-- Global Standing Card -->
-        <section class="bg-primary p-lg rounded-xl text-on-primary shadow-lg space-y-sm">
+    <main class="px-margin-mobile pt-sm space-y-lg pb-4">
+
+        <!-- Overall card -->
+        <section class="bg-primary p-lg rounded-2xl text-on-primary shadow-lg space-y-sm">
             <h3 class="font-label-md text-primary-fixed-dim uppercase tracking-wider">Overall Academic Status</h3>
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-end">
                 <div>
                     <h2 id="total-pct" class="font-display-lg text-display-lg font-bold">0%</h2>
                     <p id="total-desc" class="text-label-sm opacity-80">Classes Attended</p>
                 </div>
-                <div class="text-right">
-                    <span class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full font-label-md">Status: Active</span>
-                </div>
+                <span id="overall-status-badge" class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full font-label-md">Status: Active</span>
+            </div>
+            <!-- Overall progress bar -->
+            <div class="prediction-bar mt-sm">
+                <div id="overall-bar" class="prediction-bar-fill bg-primary-fixed-dim" style="width:0%"></div>
             </div>
         </section>
 
-        <!-- Subjects Grid List -->
-        <section class="space-y-md">
-            <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Attendance by Course</h3>
-            <div id="subjects-list" class="space-y-md">
-                <!-- Dynamically Rendered Courses -->
+        <!-- Streak banner -->
+        <section id="streak-banner" class="hidden rounded-2xl p-md flex items-center gap-md bg-surface-container-lowest border border-surface-variant/40 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">🔥</span>
+            </div>
+            <div class="flex-1">
+                <p class="font-headline-sm text-on-surface font-bold"><span id="streak-count">0</span> Day Streak</p>
+                <p id="streak-sub" class="font-label-sm text-on-surface-variant">Keep logging daily to grow your streak!</p>
             </div>
         </section>
+
+        <!-- Subject cards -->
+        <section class="space-y-md">
+            <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Smart Prediction by Subject</h3>
+            <div id="subjects-list" class="space-y-md"></div>
+        </section>
     </main>
+
+    <!-- Cutoff sidebar panel -->
+    <div id="cutoff-overlay" class="fixed inset-0 z-[160] bg-black/40 hidden" onclick="closeCutoffPanel()"></div>
+    <div id="cutoff-panel" class="fixed top-0 right-0 h-full w-72 z-[170] bg-surface-container-lowest shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+        <!-- Panel header -->
+        <div class="bg-primary p-lg text-on-primary flex justify-between items-center">
+            <div>
+                <h3 class="font-headline-sm text-headline-sm">Attendance Cutoff</h3>
+                <p class="font-label-sm opacity-80 mt-xs">Required % to pass</p>
+            </div>
+            <button onclick="closeCutoffPanel()" class="material-symbols-outlined text-on-primary">close</button>
+        </div>
+
+        <!-- Current value display -->
+        <div class="flex flex-col items-center justify-center py-lg border-b border-surface-variant/40">
+            <span id="cutoff-big" class="font-display-lg text-display-lg text-primary font-bold">75%</span>
+            <p class="font-label-sm text-on-surface-variant mt-xs">Current cutoff</p>
+        </div>
+
+        <!-- Slider -->
+        <div class="px-lg pt-lg pb-sm">
+            <label class="font-label-md text-on-surface-variant block mb-sm">Drag to set</label>
+            <input type="range" id="cutoff-slider" min="50" max="95" step="1" value="75"
+                oninput="onSliderChange(this.value)"
+                class="w-full accent-primary h-2 rounded-full cursor-pointer">
+            <div class="flex justify-between font-label-sm text-outline mt-xs">
+                <span>50%</span><span>95%</span>
+            </div>
+        </div>
+
+        <!-- Quick preset chips -->
+        <div class="px-lg pt-sm pb-md">
+            <p class="font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider">Quick presets</p>
+            <div class="flex flex-wrap gap-sm">
+                <button onclick="selectCutoff(50)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">50%</button>
+                <button onclick="selectCutoff(60)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">60%</button>
+                <button onclick="selectCutoff(65)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">65%</button>
+                <button onclick="selectCutoff(75)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">75%</button>
+                <button onclick="selectCutoff(80)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">80%</button>
+                <button onclick="selectCutoff(85)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">85%</button>
+                <button onclick="selectCutoff(90)"  class="cutoff-chip px-3 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant active:scale-95 transition-all">90%</button>
+            </div>
+        </div>
+
+        <!-- Info note -->
+        <div class="mx-lg p-sm bg-primary-fixed rounded-xl">
+            <p class="font-label-sm text-on-primary-fixed-variant leading-relaxed">
+                This sets the minimum attendance % required for <strong>all subjects</strong>. Predictions update instantly.
+            </p>
+        </div>
+
+        <!-- Apply button -->
+        <div class="mt-auto p-lg border-t border-surface-variant/40">
+            <button onclick="applyCutoff()" class="w-full bg-primary text-on-primary font-headline-sm py-4 rounded-2xl active:scale-95 transition-all shadow-lg">
+                Apply to All Subjects
+            </button>
+        </div>
+    </div>
 
     <script src="app.js"></script>
     <script>
         renderGlobalNavbar('tracker');
 
+        // ── Cutoff management ─────────────────────────────────────────
+        const CUTOFF_KEY = 'tf_attendance_cutoff';
+        let globalCutoff = parseInt(localStorage.getItem(CUTOFF_KEY) || '75');
+
+        function openCutoffPanel() {
+            document.getElementById('cutoff-slider').value = globalCutoff;
+            document.getElementById('cutoff-big').innerText = globalCutoff + '%';
+            document.getElementById('header-cutoff').innerText = globalCutoff + '%';
+            highlightChip(globalCutoff);
+            document.getElementById('cutoff-overlay').classList.remove('hidden');
+            document.getElementById('cutoff-panel').classList.add('open');
+        }
+
+        function closeCutoffPanel() {
+            document.getElementById('cutoff-overlay').classList.add('hidden');
+            document.getElementById('cutoff-panel').classList.remove('open');
+        }
+
+        function onSliderChange(val) {
+            val = parseInt(val);
+            document.getElementById('cutoff-big').innerText = val + '%';
+            highlightChip(val);
+        }
+
+        function selectCutoff(val) {
+            document.getElementById('cutoff-slider').value = val;
+            document.getElementById('cutoff-big').innerText = val + '%';
+            highlightChip(val);
+        }
+
+        function highlightChip(val) {
+            document.querySelectorAll('.cutoff-chip').forEach(btn => {
+                const btnVal = parseInt(btn.innerText);
+                btn.classList.toggle('active', btnVal === val);
+            });
+        }
+
+        function applyCutoff() {
+            const val = parseInt(document.getElementById('cutoff-slider').value);
+            globalCutoff = val;
+            localStorage.setItem(CUTOFF_KEY, val);
+            document.getElementById('header-cutoff').innerText = val + '%';
+
+            // Update required% on ALL attendance records
+            const attendance = AttendanceManager.getAttendance();
+            attendance.forEach(a => a.required = val);
+            AttendanceManager.saveAttendance(attendance);
+
+            closeCutoffPanel();
+            loadTracker();
+        }
+
+        // ── Prediction engine ─────────────────────────────────────────
+        // Given attended, total, required%, compute:
+        //   canBunk  — how many more you can miss and stay above required
+        //   needAttend — how many consecutive classes you must attend to reach required
+        //   ifAbsent%  — what % you'd have after ONE more absence
+        //   ifPresent% — what % you'd have after ONE more present
+        function predict(attended, total, required) {
+            const req = required / 100;
+
+            // Can bunk: floor( attended/req ) - total
+            const canBunk = total > 0 && attended / total >= req
+                ? Math.max(0, Math.floor(attended / req) - total)
+                : 0;
+
+            // Need attend: smallest n such that (attended+n)/(total+n) >= req
+            // => attended + n >= req*(total + n) => n*(1-req) >= req*total - attended
+            // => n >= (req*total - attended) / (1 - req)
+            let needAttend = 0;
+            if (total === 0 || attended / total < req) {
+                const num = req * total - attended;
+                needAttend = req < 1 ? Math.ceil(num / (1 - req)) : 999;
+                needAttend = Math.max(0, needAttend);
+            }
+
+            // If absent next class
+            const ifAbsentPct = total > 0
+                ? Math.round((attended / (total + 1)) * 100)
+                : 0;
+
+            // If present next class
+            const ifPresentPct = total > 0
+                ? Math.round(((attended + 1) / (total + 1)) * 100)
+                : 100;
+
+            const currentPct = total > 0 ? Math.round((attended / total) * 100) : 0;
+
+            return { canBunk, needAttend, ifAbsentPct, ifPresentPct, currentPct };
+        }
+
+        // ── Render ────────────────────────────────────────────────────
         function loadTracker() {
             const attendance = AttendanceManager.getAttendance();
             const list = document.getElementById('subjects-list');
 
-            let totalAttended = 0;
-            let totalHeld = 0;
+            let totalAttended = 0, totalHeld = 0;
 
             if (attendance.length === 0) {
-                list.innerHTML = `<p class="text-on-surface-variant text-center py-6 text-label-md">No classes logged yet. Add some in Schedule.</p>`;
+                list.innerHTML = `
+                    <div class="flex flex-col items-center py-12 text-on-surface-variant gap-sm text-center">
+                        <span class="material-symbols-outlined text-5xl">analytics</span>
+                        <p class="font-headline-sm">No attendance logged yet</p>
+                        <p class="font-label-md">Log present/absent from the Schedule page<br>after each class.</p>
+                        <a href="timetable.html" class="mt-2 bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl active:scale-95 transition-all">Go to Schedule</a>
+                    </div>`;
+                document.getElementById('total-pct').innerText = '--';
+                document.getElementById('total-desc').innerText = 'No data yet';
                 return;
             }
 
             list.innerHTML = attendance.map((sub, index) => {
-                const pct = sub.total > 0 ? Math.round((sub.attended / sub.total) * 100) : 100;
                 totalAttended += sub.attended;
-                totalHeld += sub.total;
+                totalHeld     += sub.total;
 
-                // Safe bunk calculation
-                const minPct = sub.required / 100;
-                let statusText = "Safe Bunk";
-                let statusClass = "bg-tertiary-fixed text-on-tertiary-fixed";
-                let bunkCount = 0;
+                const { canBunk, needAttend, ifAbsentPct, ifPresentPct, currentPct } = predict(sub.attended, sub.total, sub.required);
+                const req = sub.required;
+                const isSafe = currentPct >= req;
 
-                if (sub.total > 0) {
-                    const currentPct = (sub.attended / sub.total);
-                    if (currentPct >= minPct) {
-                        bunkCount = Math.floor(sub.attended / minPct) - sub.total;
-                        statusText = bunkCount > 0 ? `${bunkCount} Bunks Safe` : "1 Bunk Safe";
-                    } else {
-                        statusText = "Stay in Class";
-                        statusClass = "bg-error-container text-on-error-container font-bold";
-                    }
+                // Status badge
+                let statusBadge, statusColor;
+                if (sub.total === 0) {
+                    statusBadge = 'No data'; statusColor = 'bg-surface-container text-on-surface-variant';
+                } else if (isSafe && canBunk >= 3) {
+                    statusBadge = '✅ Safe'; statusColor = 'bg-tertiary-fixed text-on-tertiary-fixed';
+                } else if (isSafe && canBunk > 0) {
+                    statusBadge = '⚠️ Borderline'; statusColor = 'bg-secondary-fixed text-on-secondary-fixed';
+                } else if (isSafe && canBunk === 0) {
+                    statusBadge = '⚡ No buffer'; statusColor = 'bg-secondary-fixed text-on-secondary-fixed';
+                } else {
+                    statusBadge = '🚨 At Risk'; statusColor = 'bg-error-container text-on-error-container';
                 }
 
-                // Progress stroke dash offset calculation
-                // dash-array = "pct, 100"
-                
+                // Bar color
+                const barColor = currentPct >= req ? '#00473b' : currentPct >= req - 10 ? '#0059bb' : '#ba1a1a';
+
+                // Prediction lines
+                const absentDelta = ifAbsentPct - currentPct;
+                const absentColor = absentDelta < -5 ? 'text-error font-bold' : 'text-on-surface-variant';
+
                 return `
-                    <div class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 flex items-center gap-md hover:shadow-md transition-shadow">
-                        <!-- Progress Circle -->
+                <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-variant/40 overflow-hidden">
+                    <!-- Top row -->
+                    <div class="p-md pb-sm flex items-start gap-md">
+                        <!-- Circle -->
                         <div class="relative w-14 h-14 flex-shrink-0">
-                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                            <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
                                 <path class="text-surface-variant stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3.5"></path>
-                                <path class="${pct >= 75 ? 'text-tertiary' : 'text-error'} stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="${pct}, 100" stroke-linecap="round" stroke-width="3.5"></path>
+                                <path style="stroke:${barColor}" class="stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="${currentPct}, 100" stroke-linecap="round" stroke-width="3.5"></path>
                             </svg>
-                            <div class="absolute inset-0 flex items-center justify-center font-bold text-label-sm text-primary">${pct}%</div>
+                            <div class="absolute inset-0 flex items-center justify-center font-bold text-label-sm" style="color:${barColor}">${sub.total > 0 ? currentPct + '%' : '--'}</div>
                         </div>
 
-                        <!-- Info details -->
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-headline-sm text-headline-sm text-primary font-bold">${sub.subject}</h4>
-                                <span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm ${statusClass}">${statusText}</span>
+                        <!-- Title + badge -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start gap-sm">
+                                <h4 class="font-headline-sm text-headline-sm text-primary font-bold truncate">${sub.subject}</h4>
+                                <span class="pill ${statusColor} flex-shrink-0">${statusBadge}</span>
                             </div>
-                            <p class="text-on-surface-variant text-label-sm mt-1">Logged: ${sub.attended} / ${sub.total} classes (Min Req: ${sub.required}%)</p>
-                        </div>
-
-                        <!-- Logs quick adjuster -->
-                        <div class="flex flex-col gap-sm pl-2 border-l border-outline-variant/30 text-center">
-                            <button onclick="adjustAttendance(${index}, 'present')" class="text-xl hover:scale-125 transition-transform active:scale-95">👍</button>
-                            <button onclick="adjustAttendance(${index}, 'absent')" class="text-xl hover:scale-125 transition-transform active:scale-95">👎</button>
+                            <p class="text-on-surface-variant text-label-sm mt-xs">${sub.attended}/${sub.total} attended · Min ${req}%</p>
+                            <!-- Progress bar -->
+                            <div class="prediction-bar mt-sm">
+                                <div class="prediction-bar-fill" style="width:${currentPct}%; background:${barColor}"></div>
+                            </div>
+                            <!-- Req marker hint -->
+                            <div class="relative h-2 -mt-1">
+                                <div class="absolute w-0.5 h-3 bg-outline" style="left:${req}%"></div>
+                            </div>
+                            <p class="text-outline text-label-sm" style="margin-left:${Math.max(0,req-2)}%">${req}% min</p>
                         </div>
                     </div>
-                `;
+
+                    <!-- Smart Prediction strip -->
+                    <div class="mx-md mb-md rounded-xl overflow-hidden border border-surface-variant/60">
+
+                        ${sub.total === 0 ? `
+                        <div class="p-sm text-center text-label-sm text-on-surface-variant">Log your first class to see predictions</div>
+                        ` : `
+                        <!-- Row 1: Bunk / Need -->
+                        <div class="grid grid-cols-2 divide-x divide-surface-variant/60">
+                            <div class="p-sm flex flex-col items-center text-center ${isSafe && canBunk > 0 ? 'bg-tertiary-fixed/20' : 'bg-surface-container-low'}">
+                                <span class="font-display-lg-mobile text-display-lg-mobile font-bold ${isSafe && canBunk > 0 ? 'text-tertiary' : 'text-on-surface-variant'}">${canBunk}</span>
+                                <span class="font-label-sm text-on-surface-variant leading-tight">classes you<br>can bunk</span>
+                            </div>
+                            <div class="p-sm flex flex-col items-center text-center ${needAttend > 0 ? 'bg-error-container/30' : 'bg-surface-container-low'}">
+                                <span class="font-display-lg-mobile text-display-lg-mobile font-bold ${needAttend > 0 ? 'text-error' : 'text-on-surface-variant'}">${needAttend > 0 ? needAttend : '—'}</span>
+                                <span class="font-label-sm text-on-surface-variant leading-tight">${needAttend > 0 ? 'classes needed<br>to recover' : 'on track!'}</span>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: What-if scenarios -->
+                        <div class="border-t border-surface-variant/60 px-md py-sm space-y-xs">
+                            <p class="font-label-sm text-on-surface-variant uppercase tracking-wider">What-if scenarios</p>
+                            <div class="flex justify-between items-center py-xs border-b border-surface-variant/30">
+                                <div class="flex items-center gap-sm">
+                                    <span class="text-base">❌</span>
+                                    <span class="font-label-md">If absent next class</span>
+                                </div>
+                                <span class="font-label-md font-bold ${absentColor}">
+                                    → ${ifAbsentPct}%
+                                    <span class="font-label-sm">(${absentDelta > 0 ? '+' : ''}${absentDelta}%)</span>
+                                    ${ifAbsentPct < req ? '<span class="pill bg-error text-on-error ml-1">Below limit!</span>' : ''}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center py-xs">
+                                <div class="flex items-center gap-sm">
+                                    <span class="text-base">✅</span>
+                                    <span class="font-label-md">If present next class</span>
+                                </div>
+                                <span class="font-label-md font-bold text-tertiary">
+                                    → ${ifPresentPct}%
+                                    <span class="font-label-sm text-on-surface-variant">(+${ifPresentPct - currentPct}%)</span>
+                                </span>
+                            </div>
+                        </div>
+                        `}
+                    </div>
+
+                    <!-- Quick log buttons -->
+                    <div class="flex border-t border-surface-variant/40">
+                        <button onclick="quickLog(${index},'present')"
+                            class="flex-1 py-3 flex items-center justify-center gap-2 font-label-md text-tertiary active:bg-tertiary-fixed/30 transition-all">
+                            <span class="material-symbols-outlined text-[18px]">check_circle</span> Present
+                        </button>
+                        <div class="w-px bg-surface-variant/40"></div>
+                        <button onclick="quickLog(${index},'absent')"
+                            class="flex-1 py-3 flex items-center justify-center gap-2 font-label-md text-error active:bg-error-container/50 transition-all">
+                            <span class="material-symbols-outlined text-[18px]">cancel</span> Absent
+                        </button>
+                    </div>
+                </div>`;
             }).join('');
 
-            const totalPct = totalHeld > 0 ? Math.round((totalAttended / totalHeld) * 100) : 85;
-            document.getElementById('total-pct').innerText = `${totalPct}%`;
-            document.getElementById('total-desc').innerText = `Total Logged Classes: ${totalAttended} / ${totalHeld}`;
+            // Overall
+            const totalPct = totalHeld > 0 ? Math.round((totalAttended / totalHeld) * 100) : 0;
+            document.getElementById('total-pct').innerText  = totalHeld > 0 ? `${totalPct}%` : '--';
+            document.getElementById('total-desc').innerText = `${totalAttended} / ${totalHeld} classes attended`;
+            document.getElementById('overall-bar').style.width = `${totalPct}%`;
         }
 
-        function adjustAttendance(index, type) {
+        function quickLog(index, type) {
             const attendance = AttendanceManager.getAttendance();
-            const subject = attendance[index];
-            if (subject) {
-                subject.total += 1;
-                if (type === 'present') {
-                    subject.attended += 1;
-                }
-                AttendanceManager.saveAttendance(attendance);
-                loadTracker();
-            }
+            const sub = attendance[index];
+            if (!sub) return;
+            sub.total += 1;
+            if (type === 'present') sub.attended += 1;
+            AttendanceManager.saveAttendance(attendance);
+            StreakManager.logToday();
+            loadTracker();
         }
 
-        window.addEventListener('DOMContentLoaded', loadTracker);
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('header-cutoff').innerText = globalCutoff + '%';
+            // Render streak
+            const streak = StreakManager.getStreak();
+            const banner = document.getElementById('streak-banner');
+            if (streak > 0) {
+                banner.classList.remove('hidden');
+                document.getElementById('streak-count').innerText = streak;
+                const loggedToday = StreakManager.isLoggedToday();
+                document.getElementById('streak-sub').innerText = loggedToday
+                    ? `Attendance logged today ✅ Keep it up!`
+                    : `Log today's attendance to extend your streak!`;
+            }
+            loadTracker();
+        });
     </script>
 </body>
 </html>
