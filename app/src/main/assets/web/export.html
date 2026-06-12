@@ -134,6 +134,22 @@
         PDF saved!
     </div>
 
+    <!-- PDF Viewer overlay -->
+    <div id="pdf-viewer" class="fixed inset-0 z-[200] bg-black hidden flex-col">
+        <div class="flex items-center justify-between px-margin-mobile py-sm bg-on-surface">
+            <span id="pdf-title" class="font-label-md text-surface truncate flex-1 mr-sm"></span>
+            <div class="flex gap-sm flex-shrink-0">
+                <button onclick="downloadPDF()" class="flex items-center gap-1 bg-primary text-on-primary font-label-sm px-3 py-2 rounded-lg active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-[16px]">download</span> Save
+                </button>
+                <button onclick="closePDFViewer()" class="flex items-center gap-1 bg-surface-container text-on-surface font-label-sm px-3 py-2 rounded-lg active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+            </div>
+        </div>
+        <iframe id="pdf-frame" src="" class="flex-1 w-full border-none bg-white"></iframe>
+    </div>
+
     <script src="app.js"></script>
     <script>
         renderGlobalNavbar('home');
@@ -147,6 +163,38 @@
             t.innerText = msg;
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        // ── PDF viewer ────────────────────────────────────────────────
+        let currentDoc  = null;
+        let currentName = '';
+
+        function openPDFViewer(doc, filename) {
+            currentDoc  = doc;
+            currentName = filename;
+            // Generate data URI and load into iframe
+            const uri = doc.output('datauristring');
+            document.getElementById('pdf-frame').src  = uri;
+            document.getElementById('pdf-title').innerText = filename;
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.classList.remove('hidden');
+            viewer.classList.add('flex');
+        }
+
+        function closePDFViewer() {
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.classList.add('hidden');
+            viewer.classList.remove('flex');
+            document.getElementById('pdf-frame').src = '';
+            currentDoc  = null;
+            currentName = '';
+        }
+
+        function downloadPDF() {
+            if (currentDoc) {
+                currentDoc.save(currentName);
+                showToast('✅ Saved: ' + currentName);
+            }
         }
 
         // ── PDF helpers ───────────────────────────────────────────────
@@ -183,8 +231,7 @@
         }
 
         function savePDF(doc, filename) {
-            doc.save(filename);
-            showToast('✅ PDF saved: ' + filename);
+            openPDFViewer(doc, filename);
         }
 
         // ── Timetable PDF ─────────────────────────────────────────────
