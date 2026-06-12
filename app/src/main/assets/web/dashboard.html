@@ -286,14 +286,17 @@
             const attendance = AttendanceManager.getAttendance();
             let totalAttended = 0, totalClasses = 0, bunkableCount = 0;
 
+            const globalCutoff = parseInt(localStorage.getItem('tf_attendance_cutoff') || '75');
+
             attendance.forEach(subject => {
                 totalAttended += subject.attended;
                 totalClasses  += subject.total;
-                const pct = subject.required / 100;
+                const reqLimit = subject.required || globalCutoff;
+                const pct = reqLimit / 100;
                 if (subject.total > 0) {
                     const currentPct = subject.attended / subject.total;
                     if (currentPct >= pct) {
-                        const maxBunks = Math.floor(subject.attended / pct) - subject.total;
+                        const maxBunks = Math.floor((subject.attended / pct) + 1e-9) - subject.total;
                         if (maxBunks > 0) bunkableCount += maxBunks;
                     }
                 }
@@ -307,7 +310,7 @@
             if (totalClasses === 0) {
                 attendanceStatus.innerText = "No data yet";
                 attendanceStatus.className = "font-label-sm text-label-sm text-on-surface-variant";
-            } else if (avgPct >= 75) {
+            } else if (avgPct >= globalCutoff) {
                 attendanceStatus.innerText = "Safe Margin";
                 attendanceStatus.className = "font-label-sm text-label-sm text-on-tertiary-container";
             } else {

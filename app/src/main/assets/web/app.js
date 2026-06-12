@@ -65,6 +65,10 @@ const NotesManager = {
             folder.notes = folder.notes.filter(n => n.id !== noteId);
             NotesManager.saveFolders(folders);
         }
+    },
+    deleteFolder: (folderId) => {
+        const folders = NotesManager.getFolders().filter(f => f.id !== folderId);
+        NotesManager.saveFolders(folders);
     }
 };
 
@@ -80,11 +84,12 @@ const TimetableManager = {
         // Also ensure attendance record exists
         const attendance = AttendanceManager.getAttendance();
         if (!attendance.find(a => a.subject.toLowerCase() === cls.subject.toLowerCase())) {
+            const globalCutoff = parseInt(localStorage.getItem('tf_attendance_cutoff') || '75');
             attendance.push({
                 subject: cls.subject,
                 attended: 0,
                 total: 0,
-                required: 75
+                required: globalCutoff
             });
             AttendanceManager.saveAttendance(attendance);
         }
@@ -172,7 +177,8 @@ const SubjectManager = {
         SubjectManager.saveSubjects(subjects);
         const attendance = AttendanceManager.getAttendance();
         if (!attendance.find(a => a.subject.toLowerCase() === name.toLowerCase())) {
-            attendance.push({ subject: name, attended: 0, total: 0, required: 75 });
+            const globalCutoff = parseInt(localStorage.getItem('tf_attendance_cutoff') || '75');
+            attendance.push({ subject: name, attended: 0, total: 0, required: globalCutoff });
             AttendanceManager.saveAttendance(attendance);
         }
         return s;
@@ -303,3 +309,90 @@ function renderGlobalNavbar(activeTab) {
         document.body.insertAdjacentHTML('beforeend', navbarHTML);
     }
 }
+
+// Inject custom confirm/toast styling animations
+const customStyles = document.createElement('style');
+customStyles.innerHTML = `
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-scaleUp {
+    animation: scaleUp 0.15s cubic-bezier(0.34, 1.3, 0.64, 1) forwards;
+}
+@keyframes slideInUp {
+    from { transform: translateY(100%) translateX(-50%); opacity: 0; }
+    to { transform: translateY(0) translateX(-50%); opacity: 1; }
+}
+.animate-slideInUp {
+    animation: slideInUp 0.2s cubic-bezier(0.34, 1.3, 0.64, 1) forwards;
+}
+`;
+document.head.appendChild(customStyles);
+
+window.showConfirm = function(title, message, onConfirm, onCancel = null) {
+    const existing = document.getElementById('custom-confirm-modal');
+    if (existing) existing.remove();
+
+    const modalHTML = `
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-md bg-black/40 backdrop-blur-xs transition-opacity duration-200">
+        <div class="bg-surface-container-lowest rounded-2xl w-full max-w-sm shadow-2xl p-lg space-y-md border border-surface-variant/40 animate-scaleUp">
+            <h3 class="font-headline-sm text-headline-sm text-primary font-bold">${title}</h3>
+            <p class="font-body-md text-on-surface-variant leading-relaxed whitespace-pre-wrap">${message}</p>
+            <div class="flex justify-end gap-md pt-2">
+                <button id="confirm-cancel-btn" class="text-on-surface-variant font-label-md px-4 py-2 rounded-xl hover:bg-surface-container transition-colors">Cancel</button>
+                <button id="confirm-ok-btn" class="bg-error text-on-error font-label-md px-5 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-md">Delete</button>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const modal = document.getElementById('custom-confirm-modal');
+    const cancelBtn = document.getElementById('confirm-cancel-btn');
+    const okBtn = document.getElementById('confirm-ok-btn');
+
+    cancelBtn.onclick = () => {
+        modal.remove();
+        if (onCancel) onCancel();
+    };
+
+    okBtn.onclick = () => {
+        modal.remove();
+        if (onConfirm) onConfirm();
+    };
+};
+
+window.showToast = function(message, type = 'success') {
+    const existing = document.querySelectorAll('.custom-toast');
+    existing.forEach(t => t.remove());
+
+    let bgClass = 'bg-tertiary text-on-tertiary';
+    let icon = 'check_circle';
+    if (type === 'error') {
+        bgClass = 'bg-error text-on-error';
+        icon = 'error';
+    } else if (type === 'info') {
+        bgClass = 'bg-primary text-on-primary';
+        icon = 'info';
+    }
+
+    const toastHTML = `
+    <div class="custom-toast fixed bottom-28 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-sm px-md py-3 rounded-full shadow-lg ${bgClass} font-label-md animate-slideInUp max-w-[90vw] truncate">
+        <span class="material-symbols-outlined text-[20px]">${icon}</span>
+        <span>${message}</span>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', toastHTML);
+
+    const toast = document.querySelector('.custom-toast');
+    setTimeout(() => {
+        if (toast) {
+            toast.style.transition = 'opacity 0.3s ease';
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 2500);
+};

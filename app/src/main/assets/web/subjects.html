@@ -206,11 +206,16 @@
             renderSubjects();
         }
 
-        // ── Delete ───────────────────────────────────────────────────
         function deleteSubject(id, name) {
-            if (!confirm(`Delete "${name}"?\n\nThis will not remove scheduled classes.`)) return;
-            SubjectManager.deleteSubject(id);
-            renderSubjects();
+            showConfirm(
+                "Delete Subject",
+                `Delete "${name}"?\n\nThis will not remove scheduled classes.`,
+                () => {
+                    SubjectManager.deleteSubject(id);
+                    renderSubjects();
+                    showToast("Subject deleted successfully");
+                }
+            );
         }
 
         // ── Render ───────────────────────────────────────────────────
@@ -226,6 +231,8 @@
             const list     = document.getElementById('subjects-list');
             const empty    = document.getElementById('empty-state');
             const hint     = document.getElementById('hint-text');
+
+            const globalCutoff = parseInt(localStorage.getItem('tf_attendance_cutoff') || '75');
 
             // Stats
             const totalCredits = subjects.reduce((s, sub) => s + (sub.credits || 0), 0);
@@ -261,13 +268,13 @@
                             <div class="flex items-center gap-sm mt-xs flex-wrap">
                                 <span class="px-2 py-0.5 ${c.bg} ${c.text} rounded-full font-label-sm text-label-sm opacity-90">${s.credits} cr</span>
                                 ${pct !== null
-                                    ? `<span class="font-label-sm text-label-sm ${pct >= 75 ? 'text-on-tertiary-container' : 'text-error'}">${pct}% attendance</span>`
+                                    ? `<span class="font-label-sm text-label-sm ${pct >= globalCutoff ? 'text-on-tertiary-container' : 'text-error'}">${pct}% attendance</span>`
                                     : `<span class="font-label-sm text-label-sm text-on-surface-variant">No classes logged yet</span>`
                                 }
                             </div>
                         </div>
                         <!-- Delete -->
-                        <button onclick="deleteSubject('${s.id}','${s.name.replace(/'/g,"\\'")}'" )
+                        <button onclick="deleteSubject('${s.id}','${s.name.replace(/'/g,"\\'")}')"
                             class="w-9 h-9 rounded-xl bg-error-container text-on-error-container flex items-center justify-center active:scale-90 transition-all flex-shrink-0">
                             <span class="material-symbols-outlined text-[18px]">delete</span>
                         </button>

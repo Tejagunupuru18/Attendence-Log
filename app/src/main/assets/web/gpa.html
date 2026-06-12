@@ -171,20 +171,7 @@
         // Course rows list data state
         let courseRowsCount = 0;
 
-        const GRADES = {
-            "A": 4.0,
-            "A-": 3.7,
-            "B+": 3.3,
-            "B": 3.0,
-            "B-": 2.7,
-            "C+": 2.3,
-            "C": 2.0,
-            "C-": 1.7,
-            "D": 1.0,
-            "F": 0.0
-        };
-
-        function addCourseRow(name = "", credits = 3, grade = "A") {
+        function addCourseRow(name = "", credits = 3, grade = 10.0) {
             courseRowsCount++;
             const list = document.getElementById('calculator-list');
             const rowId = `course-row-${courseRowsCount}`;
@@ -195,17 +182,9 @@
             div.innerHTML = `
                 <input type="text" class="flex-grow bg-surface-container-low border-none rounded-lg py-2 px-3 text-label-md outline-none focus:ring-1 focus:ring-primary" placeholder="Course Name" value="${name}" oninput="calculateSGPA()">
                 
-                <select class="w-16 bg-surface-container-low border-none rounded-lg py-2 px-2 text-label-md outline-none focus:ring-1 focus:ring-primary" onchange="calculateSGPA()">
-                    <option value="1" ${credits==1?'selected':''}>1 Cr</option>
-                    <option value="2" ${credits==2?'selected':''}>2 Cr</option>
-                    <option value="3" ${credits==3?'selected':''}>3 Cr</option>
-                    <option value="4" ${credits==4?'selected':''}>4 Cr</option>
-                    <option value="5" ${credits==5?'selected':''}>5 Cr</option>
-                </select>
+                <input type="number" class="w-20 bg-surface-container-low border-none rounded-lg py-2 px-2 text-label-md outline-none focus:ring-1 focus:ring-primary text-center" placeholder="Credits" min="0" step="any" value="${credits}" oninput="calculateSGPA()">
 
-                <select class="w-20 bg-surface-container-low border-none rounded-lg py-2 px-2 text-label-md outline-none focus:ring-1 focus:ring-primary" onchange="calculateSGPA()">
-                    ${Object.keys(GRADES).map(g => `<option value="${g}" ${g===grade?'selected':''}>Grade ${g}</option>`).join('')}
-                </select>
+                <input type="number" class="w-24 bg-surface-container-low border-none rounded-lg py-2 px-2 text-label-md outline-none focus:ring-1 focus:ring-primary text-center" placeholder="Grade / 10" min="0" max="10" step="any" value="${grade}" oninput="calculateSGPA()">
 
                 <button onclick="removeCourseRow('${rowId}')" class="text-error font-bold text-lg px-2 hover:scale-110 active:scale-90">✕</button>
             `;
@@ -228,13 +207,15 @@
             let weightedScore = 0;
 
             for (let row of rows) {
-                const inputs = row.querySelectorAll('input, select');
-                const credits = parseInt(inputs[1].value);
-                const gradeStr = inputs[2].value;
-                const points = GRADES[gradeStr] || 0;
+                const inputs = row.querySelectorAll('input');
+                const credits = parseFloat(inputs[1].value);
+                const points = parseFloat(inputs[2].value);
 
-                totalCredits += credits;
-                weightedScore += (credits * points);
+                const validCredits = isNaN(credits) ? 0 : credits;
+                const validPoints = isNaN(points) ? 0 : points;
+
+                totalCredits += validCredits;
+                weightedScore += (validCredits * validPoints);
             }
 
             const sgpa = totalCredits > 0 ? (weightedScore / totalCredits).toFixed(2) : "0.00";
@@ -244,7 +225,8 @@
 
         function saveSemesterGPA() {
             const sgpa = calculateSGPA();
-            if (sgpa === 0) return;
+            const list = document.getElementById('calculator-list');
+            if (list.children.length === 0) return;
 
             const semNum = GPAManager.getGPAHistory().length + 1;
             GPAManager.addGPAHistory(`Semester ${semNum}`, sgpa);

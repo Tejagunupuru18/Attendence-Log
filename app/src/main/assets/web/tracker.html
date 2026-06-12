@@ -230,7 +230,7 @@
 
             // Can bunk: floor( attended/req ) - total
             const canBunk = total > 0 && attended / total >= req
-                ? Math.max(0, Math.floor(attended / req) - total)
+                ? Math.max(0, Math.floor((attended / req) + 1e-9) - total)
                 : 0;
 
             // Need attend: smallest n such that (attended+n)/(total+n) >= req
@@ -243,19 +243,9 @@
                 needAttend = Math.max(0, needAttend);
             }
 
-            // If absent next class
-            const ifAbsentPct = total > 0
-                ? Math.round((attended / (total + 1)) * 100)
-                : 0;
-
-            // If present next class
-            const ifPresentPct = total > 0
-                ? Math.round(((attended + 1) / (total + 1)) * 100)
-                : 100;
-
             const currentPct = total > 0 ? Math.round((attended / total) * 100) : 0;
 
-            return { canBunk, needAttend, ifAbsentPct, ifPresentPct, currentPct };
+            return { canBunk, needAttend, currentPct };
         }
 
         // ── Render ────────────────────────────────────────────────────
@@ -282,7 +272,7 @@
                 totalAttended += sub.attended;
                 totalHeld     += sub.total;
 
-                const { canBunk, needAttend, ifAbsentPct, ifPresentPct, currentPct } = predict(sub.attended, sub.total, sub.required);
+                const { canBunk, needAttend, currentPct } = predict(sub.attended, sub.total, sub.required);
                 const req = sub.required;
                 const isSafe = currentPct >= req;
 
@@ -302,10 +292,6 @@
 
                 // Bar color
                 const barColor = currentPct >= req ? '#00473b' : currentPct >= req - 10 ? '#0059bb' : '#ba1a1a';
-
-                // Prediction lines
-                const absentDelta = ifAbsentPct - currentPct;
-                const absentColor = absentDelta < -5 ? 'text-error font-bold' : 'text-on-surface-variant';
 
                 return `
                 <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-variant/40 overflow-hidden">
@@ -354,32 +340,6 @@
                             <div class="p-sm flex flex-col items-center text-center ${needAttend > 0 ? 'bg-error-container/30' : 'bg-surface-container-low'}">
                                 <span class="font-display-lg-mobile text-display-lg-mobile font-bold ${needAttend > 0 ? 'text-error' : 'text-on-surface-variant'}">${needAttend > 0 ? needAttend : '—'}</span>
                                 <span class="font-label-sm text-on-surface-variant leading-tight">${needAttend > 0 ? 'classes needed<br>to recover' : 'on track!'}</span>
-                            </div>
-                        </div>
-
-                        <!-- Row 2: What-if scenarios -->
-                        <div class="border-t border-surface-variant/60 px-md py-sm space-y-xs">
-                            <p class="font-label-sm text-on-surface-variant uppercase tracking-wider">What-if scenarios</p>
-                            <div class="flex justify-between items-center py-xs border-b border-surface-variant/30">
-                                <div class="flex items-center gap-sm">
-                                    <span class="text-base">❌</span>
-                                    <span class="font-label-md">If absent next class</span>
-                                </div>
-                                <span class="font-label-md font-bold ${absentColor}">
-                                    → ${ifAbsentPct}%
-                                    <span class="font-label-sm">(${absentDelta > 0 ? '+' : ''}${absentDelta}%)</span>
-                                    ${ifAbsentPct < req ? '<span class="pill bg-error text-on-error ml-1">Below limit!</span>' : ''}
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center py-xs">
-                                <div class="flex items-center gap-sm">
-                                    <span class="text-base">✅</span>
-                                    <span class="font-label-md">If present next class</span>
-                                </div>
-                                <span class="font-label-md font-bold text-tertiary">
-                                    → ${ifPresentPct}%
-                                    <span class="font-label-sm text-on-surface-variant">(+${ifPresentPct - currentPct}%)</span>
-                                </span>
                             </div>
                         </div>
                         `}
