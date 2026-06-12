@@ -134,20 +134,73 @@
         PDF saved!
     </div>
 
+    <!-- PDF.js for in-app rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
     <!-- PDF Viewer overlay -->
-    <div id="pdf-viewer" class="fixed inset-0 z-[200] bg-black hidden flex-col">
-        <div class="flex items-center justify-between px-margin-mobile py-sm bg-on-surface">
-            <span id="pdf-title" class="font-label-md text-surface truncate flex-1 mr-sm"></span>
-            <div class="flex gap-sm flex-shrink-0">
-                <button onclick="downloadPDF()" class="flex items-center gap-1 bg-primary text-on-primary font-label-sm px-3 py-2 rounded-lg active:scale-95 transition-all">
-                    <span class="material-symbols-outlined text-[16px]">download</span> Save
+    <div id="pdf-viewer" class="fixed inset-0 z-[200] bg-[#1a1a2e] hidden flex-col">
+        <!-- Viewer toolbar -->
+        <div class="flex items-center justify-between px-margin-mobile py-sm bg-[#15157d] flex-shrink-0">
+            <span id="pdf-title" class="font-label-md text-white truncate flex-1 mr-sm text-sm"></span>
+            <div class="flex items-center gap-sm flex-shrink-0">
+                <span id="pdf-page-info" class="font-label-sm text-white/70 text-xs"></span>
+                <button onclick="prevPage()" class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center active:bg-white/40">
+                    <span class="material-symbols-outlined text-white text-[18px]">chevron_left</span>
                 </button>
-                <button onclick="closePDFViewer()" class="flex items-center gap-1 bg-surface-container text-on-surface font-label-sm px-3 py-2 rounded-lg active:scale-95 transition-all">
-                    <span class="material-symbols-outlined text-[16px]">close</span>
+                <button onclick="nextPage()" class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center active:bg-white/40">
+                    <span class="material-symbols-outlined text-white text-[18px]">chevron_right</span>
+                </button>
+                <button onclick="downloadPDF()" class="flex items-center gap-1 bg-white text-primary font-label-sm px-3 py-1.5 rounded-lg active:scale-95 transition-all text-xs font-bold">
+                    <span class="material-symbols-outlined text-[15px]">download</span> Save
+                </button>
+                <button onclick="closePDFViewer()" class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center active:bg-white/40">
+                    <span class="material-symbols-outlined text-white text-[18px]">close</span>
                 </button>
             </div>
         </div>
-        <iframe id="pdf-frame" src="" class="flex-1 w-full border-none bg-white"></iframe>
+        <!-- Canvas scroll area -->
+        <div id="pdf-canvas-container" class="flex-1 overflow-y-auto flex flex-col items-center py-4 gap-3">
+            <!-- Canvases injected here per page -->
+        </div>
+        <!-- Loading indicator -->
+        <div id="pdf-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-[#1a1a2e] z-10">
+            <div class="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
+            <p class="text-white font-label-md">Generating PDF…</p>
+        </div>
+    </div>
+
+    <!-- Save confirmation dialog -->
+    <div id="save-confirm" class="fixed inset-0 z-[300] bg-black/60 hidden items-center justify-center p-md">
+        <div class="bg-white rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden">
+            <div class="bg-tertiary p-md flex items-center gap-sm">
+                <div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-on-tertiary-fixed text-[22px]">check_circle</span>
+                </div>
+                <div>
+                    <p class="font-label-md text-on-tertiary font-bold">PDF Saved!</p>
+                    <p class="font-label-sm text-on-tertiary opacity-80">Download complete</p>
+                </div>
+            </div>
+            <div class="p-md space-y-sm">
+                <p class="font-label-md text-on-surface font-bold truncate" id="save-filename"></p>
+                <!-- Success path -->
+                <div id="save-path-box" class="bg-surface-container-low rounded-xl p-sm flex items-start gap-sm">
+                    <span class="material-symbols-outlined text-primary text-[20px] flex-shrink-0 mt-xs">folder</span>
+                    <div>
+                        <p class="font-label-sm text-on-surface-variant">Saved to</p>
+                        <p class="font-label-md text-on-surface font-bold" id="save-path">Downloads/Attendance Tracker/</p>
+                        <p class="font-label-sm text-secondary mt-xs">Open <strong>Files app → Downloads → Attendance Tracker</strong> to find it.</p>
+                    </div>
+                </div>
+                <!-- Error state -->
+                <div id="save-error" class="hidden bg-error-container rounded-xl p-sm">
+                    <p class="font-label-sm text-on-error-container" id="save-error-msg"></p>
+                </div>
+            </div>
+            <div class="border-t border-surface-variant/40">
+                <button onclick="closeSaveConfirm()" class="w-full py-4 font-label-md text-primary font-bold active:bg-surface-container-low transition-all">OK</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
@@ -165,36 +218,139 @@
             setTimeout(() => t.classList.remove('show'), 2500);
         }
 
-        // ── PDF viewer ────────────────────────────────────────────────
+        // ── PDF viewer (PDF.js canvas renderer) ───────────────────────
         let currentDoc  = null;
         let currentName = '';
+        let pdfJsDoc    = null;
+        let currentPage = 1;
+        let totalPages  = 0;
 
-        function openPDFViewer(doc, filename) {
+        // Set PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        async function openPDFViewer(doc, filename) {
             currentDoc  = doc;
             currentName = filename;
-            // Generate data URI and load into iframe
-            const uri = doc.output('datauristring');
-            document.getElementById('pdf-frame').src  = uri;
-            document.getElementById('pdf-title').innerText = filename;
+
+            // Show viewer + loading
             const viewer = document.getElementById('pdf-viewer');
             viewer.classList.remove('hidden');
             viewer.classList.add('flex');
+            document.getElementById('pdf-loading').style.display = 'flex';
+            document.getElementById('pdf-title').innerText = filename;
+            document.getElementById('pdf-canvas-container').innerHTML = '';
+
+            // Get PDF bytes from jsPDF
+            const pdfBytes = doc.output('arraybuffer');
+
+            try {
+                pdfJsDoc   = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+                totalPages = pdfJsDoc.numPages;
+                currentPage = 1;
+                document.getElementById('pdf-loading').style.display = 'none';
+                await renderAllPages();
+            } catch(e) {
+                document.getElementById('pdf-loading').innerHTML =
+                    '<p class="text-white font-label-md">Could not render PDF. Tap Save to download.</p>';
+            }
+        }
+
+        async function renderAllPages() {
+            const container = document.getElementById('pdf-canvas-container');
+            container.innerHTML = '';
+            const screenW = window.innerWidth - 16;
+
+            for (let i = 1; i <= totalPages; i++) {
+                const page     = await pdfJsDoc.getPage(i);
+                const viewport = page.getViewport({ scale: 1 });
+                const scale    = screenW / viewport.width;
+                const scaled   = page.getViewport({ scale });
+
+                const canvas     = document.createElement('canvas');
+                canvas.width     = scaled.width;
+                canvas.height    = scaled.height;
+                canvas.className = 'rounded-lg shadow-lg bg-white';
+                container.appendChild(canvas);
+
+                await page.render({ canvasContext: canvas.getContext('2d'), viewport: scaled }).promise;
+            }
+
+            updatePageInfo();
+        }
+
+        function updatePageInfo() {
+            document.getElementById('pdf-page-info').innerText =
+                totalPages > 0 ? `${totalPages} page${totalPages > 1 ? 's' : ''}` : '';
+        }
+
+        function prevPage() {
+            const container = document.getElementById('pdf-canvas-container');
+            const canvases  = container.querySelectorAll('canvas');
+            if (canvases.length > 1) canvases[Math.max(0, currentPage - 2)]?.scrollIntoView({ behavior: 'smooth' });
+            currentPage = Math.max(1, currentPage - 1);
+        }
+
+        function nextPage() {
+            const container = document.getElementById('pdf-canvas-container');
+            const canvases  = container.querySelectorAll('canvas');
+            if (currentPage < totalPages) {
+                canvases[currentPage]?.scrollIntoView({ behavior: 'smooth' });
+                currentPage++;
+            }
         }
 
         function closePDFViewer() {
             const viewer = document.getElementById('pdf-viewer');
             viewer.classList.add('hidden');
             viewer.classList.remove('flex');
-            document.getElementById('pdf-frame').src = '';
+            document.getElementById('pdf-canvas-container').innerHTML = '';
+            pdfJsDoc    = null;
             currentDoc  = null;
             currentName = '';
         }
 
         function downloadPDF() {
-            if (currentDoc) {
+            if (!currentDoc) return;
+
+            // Use native Android interface if available (in-app WebView)
+            if (window.Android && typeof window.Android.savePdf === 'function') {
+                const base64 = currentDoc.output('datauristring'); // "data:application/pdf;base64,..."
+                const result = window.Android.savePdf(base64, currentName);
+                if (result.startsWith('ERROR:')) {
+                    showSaveConfirm(currentName, null, result.replace('ERROR:', '').trim());
+                } else {
+                    showSaveConfirm(currentName, result, null);
+                }
+            } else {
+                // Fallback for browser testing
                 currentDoc.save(currentName);
-                showToast('✅ Saved: ' + currentName);
+                showSaveConfirm(currentName, 'Downloads/Attendance Tracker/' + currentName, null);
             }
+        }
+
+        function showSaveConfirm(filename, path, errorMsg) {
+            document.getElementById('save-filename').innerText = filename;
+            const pathEl  = document.getElementById('save-path');
+            const errEl   = document.getElementById('save-error');
+            const pathBox = document.getElementById('save-path-box');
+            if (errorMsg) {
+                pathBox.classList.add('hidden');
+                errEl.classList.remove('hidden');
+                document.getElementById('save-error-msg').innerText = '⚠️ ' + errorMsg;
+            } else {
+                pathBox.classList.remove('hidden');
+                errEl.classList.add('hidden');
+                pathEl.innerText = path || ('Downloads/Attendance Tracker/' + filename);
+            }
+            const dialog = document.getElementById('save-confirm');
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+        }
+
+        function closeSaveConfirm() {
+            document.getElementById('save-confirm').classList.add('hidden');
+            document.getElementById('save-confirm').classList.remove('flex');
         }
 
         // ── PDF helpers ───────────────────────────────────────────────

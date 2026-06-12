@@ -183,6 +183,36 @@ const SubjectManager = {
     }
 };
 
+// ── Holiday Manager ───────────────────────────────────────────
+// Stores holidays as { "YYYY-MM-DD": "Holiday Name" }
+const HolidayManager = {
+    KEY: 'tf_holidays',
+    getAll: () => getData('tf_holidays', {}),
+    save:   (h)  => saveData('tf_holidays', h),
+
+    isHoliday: (dateStr) => {
+        const h = HolidayManager.getAll();
+        return Object.prototype.hasOwnProperty.call(h, dateStr);
+    },
+
+    getLabel: (dateStr) => {
+        const h = HolidayManager.getAll();
+        return h[dateStr] || 'Holiday';
+    },
+
+    mark: (dateStr, label = 'Holiday') => {
+        const h = HolidayManager.getAll();
+        h[dateStr] = label;
+        HolidayManager.save(h);
+    },
+
+    unmark: (dateStr) => {
+        const h = HolidayManager.getAll();
+        delete h[dateStr];
+        HolidayManager.save(h);
+    }
+};
+
 // ── Daily Streak ──────────────────────────────────────────────
 // Streak = consecutive calendar days on which ANY attendance was logged
 const StreakManager = {

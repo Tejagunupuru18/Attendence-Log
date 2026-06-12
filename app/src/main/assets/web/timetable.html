@@ -98,10 +98,15 @@
         /* today column highlight */
         .today-col { background: #e1e0ff22; }
         .today-header { background: #15157d !important; color: #fff !important; border-radius: 8px; }
+        /* holiday column */
+        .holiday-col { background: repeating-linear-gradient(135deg, #ffdad622 0px, #ffdad622 4px, transparent 4px, transparent 10px); }
+        .holiday-chip { opacity: 0.35; pointer-events: none; }
 
         /* Detail sheet */
         #detail-sheet { transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1); transform: translateY(100%); }
         #detail-sheet.open { transform: translateY(0); }
+        #holiday-sheet { transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1); transform: translateY(100%); }
+        #holiday-sheet.open { transform: translateY(0); }
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased pb-24 overflow-x-hidden">
@@ -233,6 +238,47 @@
         </button>
     </div>
     <div id="detail-overlay" class="fixed inset-0 z-[155] bg-black/40 hidden" onclick="closeDetail()"></div>
+
+    <!-- Holiday bottom sheet -->
+    <div id="holiday-sheet" class="fixed bottom-0 left-0 right-0 z-[160] bg-white rounded-t-3xl shadow-2xl p-lg pb-10 max-w-md mx-auto">
+        <div class="w-12 h-1 bg-outline-variant rounded-full mx-auto mb-lg"></div>
+        <div class="flex items-center gap-sm mb-md">
+            <span class="text-3xl">🎉</span>
+            <div>
+                <h3 id="holiday-sheet-title" class="font-headline-sm text-headline-sm text-on-surface font-bold"></h3>
+                <p id="holiday-sheet-date" class="font-label-sm text-on-surface-variant"></p>
+            </div>
+        </div>
+
+        <!-- If already a holiday — show unmark option -->
+        <div id="holiday-already" class="hidden space-y-sm mb-md">
+            <div class="bg-error-container rounded-xl p-sm flex items-center gap-sm">
+                <span class="material-symbols-outlined text-error text-[18px]">warning</span>
+                <p class="font-label-sm text-on-error-container">This day is marked as a holiday. All classes are hidden.</p>
+            </div>
+            <button onclick="unmarkHoliday()" class="w-full py-3 rounded-xl border border-error text-error font-label-md active:scale-95 transition-all">
+                Remove Holiday Mark
+            </button>
+        </div>
+
+        <!-- If not a holiday — show mark option -->
+        <div id="holiday-mark-form" class="hidden space-y-md mb-md">
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Holiday Name <span class="text-outline">(optional)</span></label>
+                <input type="text" id="holiday-label-input"
+                    class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-error outline-none py-3 px-4 font-label-md"
+                    placeholder="e.g. Diwali, Republic Day, Exam…">
+            </div>
+            <button onclick="markHoliday()" class="w-full py-3 rounded-xl bg-error text-on-error font-label-md active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span class="text-xl">🎉</span> Mark as Holiday
+            </button>
+        </div>
+
+        <button onclick="closeHolidaySheet()" class="w-full py-3 rounded-xl bg-surface-container font-label-md active:scale-95 transition-all">
+            Cancel
+        </button>
+    </div>
+    <div id="holiday-overlay" class="fixed inset-0 z-[155] bg-black/40 hidden" onclick="closeHolidaySheet()"></div>
 
     <!-- Custom Confirm Dialog -->
     <div id="confirm-dialog" class="fixed inset-0 z-[300] bg-black/50 hidden flex items-center justify-center p-md">
@@ -382,14 +428,20 @@
             grid.appendChild(timeHdr);
 
             DAYS.forEach((day, i) => {
-                const isToday = (weekOffset === 0 && day === today);
-                const date    = weekDates[i];
-                const hdr     = document.createElement('div');
-                hdr.className = `day-header bg-background border-b border-surface-variant/40 border-l border-surface-variant/40 flex flex-col items-center justify-end pb-1 pt-2 px-1`;
+                const isToday   = (weekOffset === 0 && day === today);
+                const date      = weekDates[i];
+                const dateStr   = date.toISOString().substring(0, 10);
+                const isHoliday = HolidayManager.isHoliday(dateStr);
+                const holLabel  = isHoliday ? HolidayManager.getLabel(dateStr) : '';
+
+                const hdr = document.createElement('div');
+                hdr.className = `day-header bg-background border-b border-surface-variant/40 border-l border-surface-variant/40 flex flex-col items-center justify-end pb-1 pt-2 px-1 cursor-pointer active:bg-surface-container transition-all`;
                 hdr.innerHTML = `
-                    <span class="font-label-sm text-label-sm ${isToday ? 'text-on-primary' : 'text-on-surface-variant'} uppercase">${day}</span>
-                    <span class="font-label-md font-bold ${isToday ? 'text-on-primary' : 'text-primary'} w-7 h-7 flex items-center justify-center rounded-full ${isToday ? 'bg-primary' : ''}">${date.getDate()}</span>
+                    <span class="font-label-sm text-label-sm ${isToday ? 'text-on-primary' : isHoliday ? 'text-error' : 'text-on-surface-variant'} uppercase">${day}</span>
+                    <span class="font-label-md font-bold ${isToday ? 'text-on-primary' : isHoliday ? 'text-error' : 'text-primary'} w-7 h-7 flex items-center justify-center rounded-full ${isToday ? 'bg-primary' : ''}">${date.getDate()}</span>
+                    ${isHoliday ? `<span class="text-[9px] text-error font-bold truncate max-w-full px-1">🎉 ${holLabel}</span>` : ''}
                 `;
+                hdr.addEventListener('click', () => openHolidaySheet(day, date, dateStr));
                 grid.appendChild(hdr);
             });
 
@@ -402,10 +454,12 @@
                 grid.appendChild(timeLbl);
 
                 // Day cells for this row
-                DAYS.forEach(day => {
-                    const isToday = (weekOffset === 0 && day === today);
-                    const cell    = document.createElement('div');
-                    cell.className = `cell ${isToday ? 'today-col' : ''} cursor-pointer group`;
+                DAYS.forEach((day, di) => {
+                    const isToday   = (weekOffset === 0 && day === today);
+                    const dateStr   = weekDates[di].toISOString().substring(0, 10);
+                    const isHoliday = HolidayManager.isHoliday(dateStr);
+                    const cell      = document.createElement('div');
+                    cell.className  = `cell ${isToday ? 'today-col' : ''} ${isHoliday ? 'holiday-col' : ''} cursor-pointer group`;
 
                     // Build the time string for this cell slot (e.g. "09:00 AM")
                     const ampm   = hour < 12 ? 'AM' : 'PM';
@@ -416,8 +470,10 @@
                     const disp2  = nextH % 12 || 12;
                     const endT   = `${disp2.toString().padStart(2,'0')}:00 ${ampm2}`;
 
-                    // Tap on empty cell → open add modal pre-filled
-                    cell.addEventListener('click', () => openAddFromCell(day, startT, endT));
+                    // Tap on empty cell → open add modal pre-filled (skip if holiday)
+                    if (!isHoliday) {
+                        cell.addEventListener('click', () => openAddFromCell(day, startT, endT));
+                    }
 
                     // Subtle + hint inside each empty cell
                     const hint = document.createElement('div');
@@ -439,7 +495,9 @@
             const totalGridH = HOURS.length * SLOT_H;
 
             DAYS.forEach((day, colIdx) => {
-                // overlay spans full height of the time grid, placed in the right column
+                const dateStr   = weekDates[colIdx].toISOString().substring(0, 10);
+                const isHoliday = HolidayManager.isHoliday(dateStr);
+
                 const overlay = document.createElement('div');
                 overlay.style.cssText = `
                     position: absolute;
@@ -453,18 +511,26 @@
                 dayClasses.forEach(c => {
                     const top    = chipTop(c.startTime);
                     const height = chipHeight(c.startTime, c.endTime);
-                    if (top < 0 || top > totalGridH) return; // outside visible range
+                    if (top < 0 || top > totalGridH) return;
 
                     const chip = document.createElement('div');
-                    chip.className = `class-chip chip-${c.color || 'primary'}`;
-                    chip.style.cssText = `top:${top}px; height:${height}px; pointer-events:auto;`;
+                    chip.className = `class-chip ${isHoliday ? 'holiday-chip' : 'chip-' + (c.color || 'primary')}`;
+                    chip.style.cssText = `top:${top}px; height:${height}px; pointer-events:${isHoliday ? 'none' : 'auto'};`;
                     chip.innerHTML = `
                         <div class="font-bold leading-tight truncate">${c.subject}</div>
                         <div style="font-size:9px;opacity:0.85;margin-top:1px;">${c.startTime.replace(' ','')}–${c.endTime.replace(' ','')}</div>
                     `;
-                    chip.addEventListener('click', (e) => { e.stopPropagation(); openDetail(c); });
+                    if (!isHoliday) chip.addEventListener('click', (e) => { e.stopPropagation(); openDetail(c); });
                     overlay.appendChild(chip);
                 });
+
+                // Holiday full-day banner
+                if (isHoliday) {
+                    const banner = document.createElement('div');
+                    banner.style.cssText = `position:absolute;top:4px;left:2px;right:2px;pointer-events:none;z-index:4;`;
+                    banner.innerHTML = `<div style="background:#ffdad6;border:1px solid #ba1a1a22;border-radius:8px;padding:4px 6px;text-align:center;font-size:9px;font-weight:700;color:#ba1a1a">🎉 ${HolidayManager.getLabel(dateStr)}</div>`;
+                    overlay.appendChild(banner);
+                }
 
                 // Attach overlay to the correct day column cells
                 // The column cells start at grid child index: 1 (header) + colIdx+1 (day header) then every 7th child
@@ -544,6 +610,45 @@
         function confirmCancel() {
             document.getElementById('confirm-dialog').classList.add('hidden');
             confirmCallback = null;
+        }
+
+        // ── Holiday sheet ─────────────────────────────────────────────
+        let activeHolidayDate = '';
+        let activeHolidayDay  = '';
+
+        function openHolidaySheet(day, dateObj, dateStr) {
+            activeHolidayDate = dateStr;
+            activeHolidayDay  = day;
+            const fmt = dateObj.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+            const isHoliday = HolidayManager.isHoliday(dateStr);
+
+            document.getElementById('holiday-sheet-title').innerText = isHoliday
+                ? HolidayManager.getLabel(dateStr) : 'Mark as Holiday';
+            document.getElementById('holiday-sheet-date').innerText = fmt;
+            document.getElementById('holiday-already').classList.toggle('hidden', !isHoliday);
+            document.getElementById('holiday-mark-form').classList.toggle('hidden', isHoliday);
+            document.getElementById('holiday-label-input').value = '';
+
+            document.getElementById('holiday-sheet').classList.add('open');
+            document.getElementById('holiday-overlay').classList.remove('hidden');
+        }
+
+        function closeHolidaySheet() {
+            document.getElementById('holiday-sheet').classList.remove('open');
+            document.getElementById('holiday-overlay').classList.add('hidden');
+        }
+
+        function markHoliday() {
+            const label = document.getElementById('holiday-label-input').value.trim() || 'Holiday';
+            HolidayManager.mark(activeHolidayDate, label);
+            closeHolidaySheet();
+            buildGrid();
+        }
+
+        function unmarkHoliday() {
+            HolidayManager.unmark(activeHolidayDate);
+            closeHolidaySheet();
+            buildGrid();
         }
 
         // ── Add Class form ───────────────────────────────────────────
