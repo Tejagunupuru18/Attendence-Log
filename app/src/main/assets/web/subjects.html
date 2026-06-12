@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <title>TimeFlow - Subjects</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container":"#edeeef","tertiary-container":"#00473b","on-tertiary":"#ffffff",
+                        "outline-variant":"#c7c5d4","background":"#f8f9fa","surface-variant":"#e1e3e4",
+                        "on-primary":"#ffffff","surface-container-lowest":"#ffffff","on-surface":"#191c1d",
+                        "tertiary":"#002f26","on-secondary":"#ffffff","error":"#ba1a1a","surface":"#f8f9fa",
+                        "primary-container":"#2e3192","secondary-container":"#0070ea","on-background":"#191c1d",
+                        "surface-container-highest":"#e1e3e4","primary-fixed-dim":"#c0c1ff",
+                        "on-primary-container":"#9da1ff","on-tertiary-container":"#00bfa2","outline":"#777683",
+                        "error-container":"#ffdad6","on-error-container":"#93000a","secondary":"#0059bb",
+                        "primary":"#15157d","tertiary-fixed-dim":"#2cdebf","on-surface-variant":"#464652",
+                        "surface-container-low":"#f3f4f5","tertiary-fixed":"#58fbda","on-secondary-container":"#fefcff",
+                        "primary-fixed":"#e1e0ff","on-tertiary-fixed":"#00201a","secondary-fixed":"#d8e2ff",
+                        "on-primary-fixed":"#04006d","surface-container-high":"#e7e8e9","on-error":"#ffffff",
+                        "on-secondary-fixed":"#001a41","secondary-fixed-dim":"#adc7ff"
+                    },
+                    borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},
+                    spacing:{"base":"4px","sm":"8px","md":"16px","xs":"4px","margin-mobile":"16px","gutter":"12px","xl":"32px","lg":"24px"},
+                    fontFamily:{"headline-sm":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"],"body-md":["Hanken Grotesk"],"display-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"]},
+                    fontSize:{
+                        "headline-sm":["20px",{"lineHeight":"1.4","fontWeight":"700"}],
+                        "display-lg-mobile":["28px",{"lineHeight":"1.2","fontWeight":"800"}],
+                        "body-md":["16px",{"lineHeight":"1.5","fontWeight":"400"}],
+                        "display-lg":["32px",{"lineHeight":"1.2","letterSpacing":"-0.02em","fontWeight":"800"}],
+                        "headline-md":["24px",{"lineHeight":"1.3","fontWeight":"700"}],
+                        "label-sm":["12px",{"lineHeight":"1.2","fontWeight":"700"}],
+                        "body-lg":["18px",{"lineHeight":"1.5","fontWeight":"400"}],
+                        "label-md":["14px",{"lineHeight":"1.2","letterSpacing":"0.01em","fontWeight":"600"}]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+        .color-dot { width:14px; height:14px; border-radius:50%; display:inline-block; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+
+    <!-- Header -->
+    <header class="w-full top-0 sticky z-40 bg-background/90 backdrop-blur-md flex justify-between items-center px-margin-mobile py-sm border-b border-surface-variant/30">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">menu_book</span>
+            <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Subjects</h1>
+        </div>
+        <button onclick="toggleModal(true)" class="bg-primary text-on-primary font-label-md px-3 py-2 rounded-xl flex items-center gap-1 active:scale-95 transition-all shadow-md">
+            <span class="material-symbols-outlined text-[18px]">add</span> Add
+        </button>
+    </header>
+
+    <main class="px-margin-mobile pt-md space-y-lg pb-4">
+
+        <!-- Stats row -->
+        <section class="grid grid-cols-2 gap-gutter">
+            <div class="bg-primary rounded-xl p-md text-on-primary flex flex-col gap-xs shadow-md">
+                <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wider">Total Subjects</span>
+                <span id="stat-total" class="font-display-lg text-display-lg font-bold">0</span>
+            </div>
+            <div class="bg-surface-container-lowest rounded-xl p-md flex flex-col gap-xs shadow-sm border border-surface-variant/40">
+                <span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Total Credits</span>
+                <span id="stat-credits" class="font-display-lg text-display-lg font-bold text-secondary">0</span>
+            </div>
+        </section>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16 text-on-surface-variant space-y-sm">
+            <span class="material-symbols-outlined text-6xl">auto_stories</span>
+            <p class="font-headline-sm text-center">No subjects yet</p>
+            <p class="font-label-md text-center text-on-surface-variant">Add your subjects first, then build<br>your weekly schedule.</p>
+            <button onclick="toggleModal(true)" class="mt-4 bg-primary text-on-primary font-label-md px-6 py-3 rounded-xl active:scale-95 transition-all shadow-md flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span> Add First Subject
+            </button>
+        </div>
+
+        <!-- Subjects list -->
+        <section id="subjects-list" class="space-y-sm"></section>
+
+        <!-- Hint -->
+        <p id="hint-text" class="font-label-sm text-on-surface-variant text-center hidden">
+            ✅ Subjects added! Now go to <a href="timetable.html" class="text-primary font-bold underline">Schedule</a> to place them in your weekly grid.
+        </p>
+    </main>
+
+    <!-- Add Subject Modal -->
+    <div id="subject-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-end justify-center">
+        <div class="bg-white rounded-t-3xl w-full max-w-md shadow-2xl pb-10">
+            <div class="bg-primary p-lg text-white flex justify-between items-center rounded-t-3xl">
+                <h3 class="font-headline-sm text-headline-sm">Add Subject</h3>
+                <button onclick="toggleModal(false)" class="material-symbols-outlined text-white">close</button>
+            </div>
+            <div class="p-lg space-y-md">
+                <!-- Name -->
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Subject Name *</label>
+                    <input type="text" id="sub-name" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 font-label-md" placeholder="e.g. Mathematics, Physics...">
+                </div>
+
+                <!-- Credits -->
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Credits</label>
+                    <div class="flex gap-sm">
+                        <button type="button" onclick="setCredits(1)" id="cr-1" class="credit-btn flex-1 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant transition-all">1</button>
+                        <button type="button" onclick="setCredits(2)" id="cr-2" class="credit-btn flex-1 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant transition-all">2</button>
+                        <button type="button" onclick="setCredits(3)" id="cr-3" class="credit-btn flex-1 py-2 rounded-xl font-label-md bg-primary text-on-primary border-primary transition-all">3</button>
+                        <button type="button" onclick="setCredits(4)" id="cr-4" class="credit-btn flex-1 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant transition-all">4</button>
+                        <button type="button" onclick="setCredits(5)" id="cr-5" class="credit-btn flex-1 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant transition-all">5</button>
+                    </div>
+                    <input type="hidden" id="sub-credits" value="3">
+                </div>
+
+                <!-- Color -->
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-2">Color Tag</label>
+                    <div class="grid grid-cols-4 gap-sm">
+                        <button type="button" onclick="setColor('primary')"   id="col-primary"   class="color-option py-3 rounded-xl bg-primary   text-on-primary   font-label-sm font-bold active:scale-95 ring-2 ring-primary ring-offset-2">Indigo</button>
+                        <button type="button" onclick="setColor('secondary')" id="col-secondary" class="color-option py-3 rounded-xl bg-secondary text-on-secondary font-label-sm font-bold active:scale-95">Blue</button>
+                        <button type="button" onclick="setColor('tertiary')"  id="col-tertiary"  class="color-option py-3 rounded-xl bg-tertiary  text-on-tertiary  font-label-sm font-bold active:scale-95">Teal</button>
+                        <button type="button" onclick="setColor('error')"     id="col-error"     class="color-option py-3 rounded-xl bg-error     text-on-error     font-label-sm font-bold active:scale-95">Red</button>
+                    </div>
+                    <input type="hidden" id="sub-color" value="primary">
+                </div>
+
+                <div class="pt-2 flex gap-sm">
+                    <button onclick="toggleModal(false)" class="flex-1 py-3 rounded-xl bg-surface-container font-label-md">Cancel</button>
+                    <button onclick="submitSubject()" class="flex-1 py-3 rounded-xl bg-primary text-on-primary font-label-md active:scale-95 transition-all">Save Subject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        renderGlobalNavbar('subjects');
+
+        let selectedCredits = 3;
+        let selectedColor   = 'primary';
+
+        // ── Credits selector ─────────────────────────────────────────
+        function setCredits(val) {
+            selectedCredits = val;
+            document.getElementById('sub-credits').value = val;
+            [1,2,3,4,5].forEach(n => {
+                const btn = document.getElementById(`cr-${n}`);
+                if (n === val) {
+                    btn.className = 'credit-btn flex-1 py-2 rounded-xl font-label-md bg-primary text-on-primary border-primary transition-all';
+                } else {
+                    btn.className = 'credit-btn flex-1 py-2 rounded-xl font-label-md border border-outline-variant text-on-surface-variant transition-all';
+                }
+            });
+        }
+
+        // ── Color selector ───────────────────────────────────────────
+        const colorMap = {
+            primary:   'bg-primary text-on-primary',
+            secondary: 'bg-secondary text-on-secondary',
+            tertiary:  'bg-tertiary text-on-tertiary',
+            error:     'bg-error text-on-error'
+        };
+
+        function setColor(val) {
+            selectedColor = val;
+            document.getElementById('sub-color').value = val;
+            ['primary','secondary','tertiary','error'].forEach(c => {
+                const btn = document.getElementById(`col-${c}`);
+                btn.className = `color-option py-3 rounded-xl ${colorMap[c]} font-label-sm font-bold active:scale-95 transition-all ${c === val ? 'ring-2 ring-offset-2 ring-' + c : ''}`;
+            });
+        }
+
+        // ── Modal ────────────────────────────────────────────────────
+        function toggleModal(show) {
+            document.getElementById('subject-modal').classList.toggle('hidden', !show);
+            if (show) {
+                document.getElementById('sub-name').value = '';
+                setCredits(3);
+                setColor('primary');
+                setTimeout(() => document.getElementById('sub-name').focus(), 300);
+            }
+        }
+
+        // ── Submit ───────────────────────────────────────────────────
+        function submitSubject() {
+            const name    = document.getElementById('sub-name').value.trim();
+            const credits = parseInt(document.getElementById('sub-credits').value);
+            const color   = document.getElementById('sub-color').value;
+            if (!name) { document.getElementById('sub-name').focus(); return; }
+            const result = SubjectManager.addSubject(name, color, credits);
+            if (!result) {
+                alert(`"${name}" already exists.`);
+                return;
+            }
+            toggleModal(false);
+            renderSubjects();
+        }
+
+        // ── Delete ───────────────────────────────────────────────────
+        function deleteSubject(id, name) {
+            if (!confirm(`Delete "${name}"?\n\nThis will not remove scheduled classes.`)) return;
+            SubjectManager.deleteSubject(id);
+            renderSubjects();
+        }
+
+        // ── Render ───────────────────────────────────────────────────
+        const chipColors = {
+            primary:   { bg:'bg-primary',   text:'text-on-primary',   bar:'#15157d' },
+            secondary: { bg:'bg-secondary', text:'text-on-secondary', bar:'#0059bb' },
+            tertiary:  { bg:'bg-tertiary',  text:'text-on-tertiary',  bar:'#002f26' },
+            error:     { bg:'bg-error',     text:'text-on-error',     bar:'#ba1a1a' }
+        };
+
+        function renderSubjects() {
+            const subjects = SubjectManager.getSubjects();
+            const list     = document.getElementById('subjects-list');
+            const empty    = document.getElementById('empty-state');
+            const hint     = document.getElementById('hint-text');
+
+            // Stats
+            const totalCredits = subjects.reduce((s, sub) => s + (sub.credits || 0), 0);
+            document.getElementById('stat-total').innerText   = subjects.length;
+            document.getElementById('stat-credits').innerText = totalCredits;
+
+            if (subjects.length === 0) {
+                empty.classList.remove('hidden');
+                hint.classList.add('hidden');
+                list.innerHTML = '';
+                return;
+            }
+            empty.classList.add('hidden');
+            hint.classList.remove('hidden');
+
+            list.innerHTML = subjects.map(s => {
+                const c = chipColors[s.color] || chipColors.primary;
+                // Get attendance for this subject
+                const att = AttendanceManager.getAttendance().find(a => a.subject.toLowerCase() === s.name.toLowerCase());
+                const pct = att && att.total > 0 ? Math.round((att.attended / att.total) * 100) : null;
+                return `
+                <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-variant/40 overflow-hidden">
+                    <!-- Color bar -->
+                    <div class="h-1.5 w-full" style="background:${c.bar}"></div>
+                    <div class="p-md flex items-center gap-md">
+                        <!-- Icon badge -->
+                        <div class="w-12 h-12 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0 shadow">
+                            <span class="material-symbols-outlined ${c.text} text-2xl">auto_stories</span>
+                        </div>
+                        <!-- Info -->
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">${s.name}</h3>
+                            <div class="flex items-center gap-sm mt-xs flex-wrap">
+                                <span class="px-2 py-0.5 ${c.bg} ${c.text} rounded-full font-label-sm text-label-sm opacity-90">${s.credits} cr</span>
+                                ${pct !== null
+                                    ? `<span class="font-label-sm text-label-sm ${pct >= 75 ? 'text-on-tertiary-container' : 'text-error'}">${pct}% attendance</span>`
+                                    : `<span class="font-label-sm text-label-sm text-on-surface-variant">No classes logged yet</span>`
+                                }
+                            </div>
+                        </div>
+                        <!-- Delete -->
+                        <button onclick="deleteSubject('${s.id}','${s.name.replace(/'/g,"\\'")}'" )
+                            class="w-9 h-9 rounded-xl bg-error-container text-on-error-container flex items-center justify-center active:scale-90 transition-all flex-shrink-0">
+                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', renderSubjects);
+    </script>
+</body>
+</html>

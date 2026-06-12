@@ -5,29 +5,23 @@
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
     <title>TimeFlow - Quick Notes</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
-                    "colors": {
+                    colors: {
                         "surface-container-lowest": "#ffffff",
                         "on-tertiary-container": "#00bfa2",
                         "inverse-primary": "#c0c1ff",
-                        "inverse-on-surface": "#f0f1f2",
-                        "on-tertiary-fixed": "#00201a",
                         "surface-dim": "#d9dadb",
                         "surface": "#f8f9fa",
-                        "on-tertiary-fixed-variant": "#005143",
                         "error-container": "#ffdad6",
                         "on-surface": "#191c1d",
-                        "surface-bright": "#f8f9fa",
-                        "on-secondary-fixed": "#001a41",
                         "on-secondary": "#ffffff",
                         "on-background": "#191c1d",
-                        "tertiary-fixed-dim": "#2cdebf",
                         "secondary-container": "#0070ea",
                         "primary-fixed": "#e1e0ff",
                         "primary-container": "#2e3192",
@@ -36,22 +30,18 @@
                         "on-secondary-container": "#fefcff",
                         "tertiary-fixed": "#58fbda",
                         "surface-container-highest": "#e1e3e4",
-                        "inverse-surface": "#2e3132",
                         "tertiary": "#002f26",
                         "secondary": "#0059bb",
                         "on-error-container": "#93000a",
                         "surface-variant": "#e1e3e4",
                         "outline-variant": "#c7c5d4",
-                        "on-secondary-fixed-variant": "#004493",
                         "on-primary-container": "#9da1ff",
                         "on-tertiary": "#ffffff",
-                        "surface-tint": "#4f54b4",
                         "surface-container-high": "#e7e8e9",
                         "primary-fixed-dim": "#c0c1ff",
                         "tertiary-container": "#00473b",
                         "on-surface-variant": "#464652",
                         "background": "#f8f9fa",
-                        "on-primary-fixed-variant": "#373a9b",
                         "on-primary-fixed": "#04006d",
                         "secondary-fixed-dim": "#adc7ff",
                         "primary": "#15157d",
@@ -59,36 +49,20 @@
                         "secondary-fixed": "#d8e2ff",
                         "surface-container": "#edeeef",
                         "outline": "#777683",
-                        "on-primary": "#ffffff"
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#00201a",
+                        "tertiary-fixed-dim": "#2cdebf",
+                        "inverse-surface": "#2e3132",
+                        "on-secondary-fixed": "#001a41",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-secondary-fixed-variant": "#004493",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#005143"
                     },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "base": "4px",
-                        "sm": "8px",
-                        "md": "16px",
-                        "xs": "4px",
-                        "margin-desktop": "40px",
-                        "margin-mobile": "16px",
-                        "gutter": "12px",
-                        "xl": "32px",
-                        "lg": "24px"
-                    },
-                    "fontFamily": {
-                        "headline-sm": ["Plus Jakarta Sans"],
-                        "display-lg-mobile": ["Plus Jakarta Sans"],
-                        "body-md": ["Hanken Grotesk"],
-                        "display-lg": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "label-sm": ["Hanken Grotesk"],
-                        "body-lg": ["Hanken Grotesk"],
-                        "label-md": ["Hanken Grotesk"]
-                    },
-                    "fontSize": {
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    spacing: { "base": "4px", "sm": "8px", "md": "16px", "xs": "4px", "margin-desktop": "40px", "margin-mobile": "16px", "gutter": "12px", "xl": "32px", "lg": "24px" },
+                    fontFamily: { "headline-sm": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-md": ["Hanken Grotesk"], "display-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-sm": ["Hanken Grotesk"], "body-lg": ["Hanken Grotesk"], "label-md": ["Hanken Grotesk"] },
+                    fontSize: {
                         "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "700" }],
                         "display-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
                         "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
@@ -98,29 +72,21 @@
                         "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
                         "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
                     }
-                },
-            },
+                }
+            }
         }
     </script>
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #c7c5d4;
-            border-radius: 10px;
-        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c7c5d4; border-radius: 10px; }
+        .attachment-img { max-height: 180px; object-fit: cover; border-radius: 12px; width: 100%; }
+        #file-drop-zone { border: 2px dashed #c7c5d4; transition: border-color 0.2s, background 0.2s; }
+        #file-drop-zone.drag-over { border-color: #15157d; background: #e1e0ff44; }
     </style>
 </head>
 <body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+
     <!-- TopAppBar -->
     <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md px-margin-mobile py-sm">
         <div class="flex justify-between items-center mb-sm">
@@ -129,7 +95,6 @@
                 <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Academic Tools</h1>
             </div>
         </div>
-        <!-- Tool Switcher Sub-Navbar -->
         <div class="flex border-b border-surface-variant gap-lg pb-1 text-label-md">
             <a href="notes.html" class="text-primary font-bold border-b-2 border-primary pb-1">Notes</a>
             <a href="assignments.html" class="text-on-surface-variant hover:text-primary pb-1">Assignments</a>
@@ -138,53 +103,53 @@
     </header>
 
     <main class="px-margin-mobile pt-md space-y-lg">
-        <!-- Search Bar Section -->
+        <!-- Search -->
         <section class="relative">
             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-outline">search</span>
             </div>
-            <input id="search-input" oninput="filterNotes()" class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-secondary outline-none transition-all font-body-md text-on-surface placeholder:text-outline shadow-sm" placeholder="Search your notes..." type="text">
+            <input id="search-input" oninput="filterNotes()" class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-secondary outline-none transition-all font-body-md text-on-surface placeholder:text-outline shadow-sm" placeholder="Search notes & files..." type="text">
         </section>
 
-        <!-- Bento Grid of Folders -->
+        <!-- Folders Grid -->
         <section>
             <div class="flex justify-between items-center mb-md">
                 <h2 class="font-headline-sm text-headline-sm text-primary">Folders</h2>
                 <button onclick="toggleFolderModal(true)" class="text-secondary font-label-md hover:underline">+ New Folder</button>
             </div>
-            <div id="folders-grid" class="grid grid-cols-2 gap-gutter">
-                <!-- Dynamically loaded folders -->
-            </div>
+            <div id="folders-grid" class="grid grid-cols-2 gap-gutter"></div>
         </section>
 
-        <!-- Recent Notes List -->
+        <!-- Recent Items -->
         <section id="recent-section">
-            <h2 class="font-headline-sm text-headline-sm text-primary mb-md">Recent Notes</h2>
-            <div id="recent-notes-list" class="space-y-sm">
-                <!-- Dynamically loaded recent notes -->
-            </div>
+            <h2 class="font-headline-sm text-headline-sm text-primary mb-md">Recent Items</h2>
+            <div id="recent-notes-list" class="space-y-sm"></div>
         </section>
     </main>
 
-    <!-- Folder Detail View overlay -->
-    <div id="folder-detail-view" class="fixed inset-0 z-[120] bg-background hidden flex flex-col p-margin-mobile pb-32 overflow-y-auto">
-        <header class="flex justify-between items-center py-sm mb-md">
+    <!-- Folder Detail View -->
+    <div id="folder-detail-view" class="fixed inset-0 z-[120] bg-background hidden flex flex-col pb-32 overflow-y-auto">
+        <header class="sticky top-0 bg-background/90 backdrop-blur-md z-10 flex justify-between items-center px-margin-mobile py-sm mb-md border-b border-surface-variant/40">
             <button onclick="closeFolderDetail()" class="flex items-center gap-1 text-primary font-label-md">
                 <span class="material-symbols-outlined">arrow_back</span> Back
             </button>
-            <h2 id="folder-detail-title" class="font-headline-md text-headline-md text-primary">Folder Name</h2>
-            <button id="btn-add-note" class="bg-secondary text-on-secondary text-label-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">add</span> New Note
-            </button>
+            <h2 id="folder-detail-title" class="font-headline-md text-headline-md text-primary">Folder</h2>
+            <!-- Add buttons -->
+            <div class="flex gap-sm">
+                <button id="btn-add-file" class="bg-surface-container text-on-surface text-label-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-sm">attach_file</span> File
+                </button>
+                <button id="btn-add-note" class="bg-secondary text-on-secondary text-label-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-sm">add</span> Note
+                </button>
+            </div>
         </header>
-        <div id="folder-notes-list" class="space-y-md">
-            <!-- Notes in active folder -->
-        </div>
+        <div id="folder-notes-list" class="space-y-md px-margin-mobile"></div>
     </div>
 
     <!-- Create Folder Modal -->
     <div id="folder-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-center justify-center p-md">
-        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-lg space-y-md">
+        <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-lg space-y-md">
             <h3 class="font-headline-sm text-headline-sm text-primary">Create Folder</h3>
             <div>
                 <label class="block font-label-md text-on-surface-variant mb-1">Folder Name</label>
@@ -207,12 +172,21 @@
     </div>
 
     <!-- Create/Edit Note Modal -->
-    <div id="note-modal" class="fixed inset-0 z-[160] bg-black/50 hidden flex items-center justify-center p-md">
-        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl p-lg space-y-md flex flex-col max-h-[80vh]">
+    <div id="note-modal" class="fixed inset-0 z-[160] bg-black/50 hidden flex items-end justify-center">
+        <div class="bg-white rounded-t-3xl w-full max-w-md shadow-2xl p-lg space-y-md flex flex-col max-h-[90vh] pb-10">
             <h3 id="note-modal-header" class="font-headline-sm text-headline-sm text-primary">Write Note</h3>
-            <div class="space-y-sm flex-1 flex flex-col">
+            <div class="space-y-sm flex-1 flex flex-col overflow-y-auto">
                 <input type="text" id="note-title-input" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 font-bold" placeholder="Note Title">
-                <textarea id="note-content-input" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 flex-1 resize-none h-48" placeholder="Start typing details..."></textarea>
+                <textarea id="note-content-input" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 resize-none h-40" placeholder="Start typing details..."></textarea>
+
+                <!-- File attachments in note -->
+                <div id="note-attachments-preview" class="space-y-sm"></div>
+
+                <!-- Attach button inside note -->
+                <button type="button" onclick="triggerNoteFileInput()" class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-xl text-on-surface-variant font-label-md w-full justify-center border border-dashed border-outline-variant hover:bg-primary-fixed hover:text-primary transition-all">
+                    <span class="material-symbols-outlined text-[18px]">attach_file</span> Attach Image / PDF / File
+                </button>
+                <input type="file" id="note-file-input" multiple accept="image/*,.pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx" class="hidden" onchange="handleNoteFileAttach(event)">
             </div>
             <div class="flex justify-between pt-2">
                 <button id="btn-delete-note" class="text-error font-label-md hover:underline hidden">Delete</button>
@@ -222,6 +196,37 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Standalone File Upload Modal (for folder-level file attach) -->
+    <div id="file-modal" class="fixed inset-0 z-[160] bg-black/50 hidden flex items-end justify-center">
+        <div class="bg-white rounded-t-3xl w-full max-w-md shadow-2xl p-lg space-y-md pb-10">
+            <h3 class="font-headline-sm text-headline-sm text-primary">Add File to Folder</h3>
+
+            <div id="file-drop-zone" class="rounded-2xl p-lg flex flex-col items-center justify-center gap-sm text-center cursor-pointer"
+                onclick="document.getElementById('folder-file-input').click()"
+                ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                ondragleave="this.classList.remove('drag-over')"
+                ondrop="handleFolderFileDrop(event)">
+                <span class="material-symbols-outlined text-5xl text-outline">cloud_upload</span>
+                <p class="font-label-md text-on-surface-variant">Tap to browse or drag & drop</p>
+                <p class="font-label-sm text-outline">Images, PDFs, Word, Excel, PPT, TXT</p>
+            </div>
+            <input type="file" id="folder-file-input" multiple accept="image/*,.pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx" class="hidden" onchange="handleFolderFileSelect(event)">
+
+            <!-- Preview selected files -->
+            <div id="file-preview-list" class="space-y-sm max-h-40 overflow-y-auto"></div>
+
+            <div class="flex justify-end gap-md pt-2">
+                <button onclick="toggleFileModal(false)" class="text-on-surface-variant font-label-md">Cancel</button>
+                <button onclick="confirmFileUpload()" class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl">Save Files</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Viewer Modal -->
+    <div id="image-viewer" class="fixed inset-0 z-[200] bg-black/90 hidden flex items-center justify-center p-md" onclick="closeImageViewer()">
+        <img id="viewer-img" src="" class="max-w-full max-h-full rounded-xl object-contain">
     </div>
 
     <!-- FAB -->
@@ -235,94 +240,76 @@
 
         let activeFolderId = null;
         let editingNoteId = null;
+        let pendingNoteAttachments = []; // [{name, type, data}] — data = base64 or null for non-image
+        let pendingFolderFiles = [];
 
-        // Render Bento folders
+        // ── Folder rendering ────────────────────────────────────────
         function displayFolders() {
             const folders = NotesManager.getFolders();
             const grid = document.getElementById('folders-grid');
-            
+            if (folders.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-on-surface-variant text-label-md">No folders yet. Tap + New Folder.</div>`;
+                return;
+            }
             grid.innerHTML = folders.map(f => {
-                let border = 'border-primary';
-                let iconText = 'folder';
-                let textCol = 'text-primary';
-                let bgBadge = 'bg-primary-fixed text-on-primary-fixed';
-
-                if (f.color === 'secondary') {
-                    border = 'border-secondary';
-                    iconText = 'folder_open';
-                    textCol = 'text-secondary';
-                    bgBadge = 'bg-secondary-fixed text-on-secondary-fixed';
-                } else if (f.color === 'tertiary') {
-                    border = 'border-on-tertiary-container';
-                    iconText = 'cloud';
-                    textCol = 'text-on-tertiary-container';
-                    bgBadge = 'bg-tertiary-fixed text-on-tertiary-fixed';
-                } else if (f.color === 'error') {
-                    border = 'border-error';
-                    iconText = 'assignment';
-                    textCol = 'text-error';
-                    bgBadge = 'bg-error-container text-on-error-container';
-                }
-
+                let border = 'border-primary', icon = 'folder', textCol = 'text-primary', badge = 'bg-primary-fixed text-on-primary-fixed';
+                if (f.color === 'secondary') { border = 'border-secondary'; icon = 'folder_open'; textCol = 'text-secondary'; badge = 'bg-secondary-fixed text-on-secondary-fixed'; }
+                else if (f.color === 'tertiary') { border = 'border-on-tertiary-container'; icon = 'cloud'; textCol = 'text-on-tertiary-container'; badge = 'bg-tertiary-fixed text-on-tertiary-fixed'; }
+                else if (f.color === 'error') { border = 'border-error'; icon = 'assignment'; textCol = 'text-error'; badge = 'bg-error-container text-on-error-container'; }
+                const fileCount = (f.files || []).length;
+                const totalItems = f.notes.length + fileCount;
                 return `
                     <div onclick="openFolderDetail('${f.id}')" class="bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_20px_rgba(21,21,125,0.04)] border-l-4 ${border} flex flex-col justify-between aspect-square active:scale-95 transition-all cursor-pointer group hover:shadow-lg">
                         <div class="flex justify-between items-start">
-                            <span class="material-symbols-outlined ${textCol} text-3xl group-hover:scale-110 transition-transform">${iconText}</span>
-                            <span class="${bgBadge} px-2 py-0.5 rounded-lg font-label-sm text-label-sm">${f.notes.length} Notes</span>
+                            <span class="material-symbols-outlined ${textCol} text-3xl group-hover:scale-110 transition-transform">${icon}</span>
+                            <span class="${badge} px-2 py-0.5 rounded-lg font-label-sm text-label-sm">${totalItems} items</span>
                         </div>
                         <div>
                             <h3 class="font-headline-sm text-headline-sm text-primary leading-tight font-bold">${f.name}</h3>
-                            <p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Click to open</p>
+                            <p class="font-label-sm text-label-sm text-on-surface-variant mt-1">${f.notes.length} notes · ${fileCount} files</p>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
-        // Display Recents
         function displayRecents() {
             const folders = NotesManager.getFolders();
             const list = document.getElementById('recent-notes-list');
-            let allNotes = [];
-            
+            let allItems = [];
             folders.forEach(f => {
-                f.notes.forEach(n => {
-                    allNotes.push({ ...n, folderId: f.id, folderName: f.name });
-                });
+                f.notes.forEach(n => allItems.push({ kind: 'note', ...n, folderId: f.id, folderName: f.name }));
+                (f.files || []).forEach(file => allItems.push({ kind: 'file', ...file, folderId: f.id, folderName: f.name }));
             });
-
-            if (allNotes.length === 0) {
-                list.innerHTML = `<p class="text-on-surface-variant text-center py-4 text-label-md">No recent notes found.</p>`;
+            if (allItems.length === 0) {
+                list.innerHTML = `<p class="text-on-surface-variant text-center py-4 text-label-md">No items yet.</p>`;
                 return;
             }
-
-            // Slice top 3 for dashboard
-            list.innerHTML = allNotes.slice(0, 3).map(n => `
-                <div onclick="openEditNoteModal('${n.folderId}', '${n.id}')" class="flex items-center gap-md p-md bg-white rounded-xl border border-surface-variant hover:bg-surface transition-colors cursor-pointer group">
-                    <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary">description</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-label-md text-primary font-bold">${n.title}</p>
-                        <p class="font-label-sm text-on-surface-variant">${n.folderName} • ${n.updatedTime}</p>
-                    </div>
-                    <span class="material-symbols-outlined text-outline">chevron_right</span>
-                </div>
-            `).join('');
+            list.innerHTML = allItems.slice(0, 5).map(item => {
+                if (item.kind === 'note') {
+                    return `<div onclick="openEditNoteModal('${item.folderId}','${item.id}')" class="flex items-center gap-md p-md bg-white rounded-xl border border-surface-variant hover:bg-surface transition-colors cursor-pointer">
+                        <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-primary">description</span></div>
+                        <div class="flex-1"><p class="font-label-md text-primary font-bold">${item.title}</p><p class="font-label-sm text-on-surface-variant">${item.folderName} · ${item.updatedTime}</p></div>
+                        <span class="material-symbols-outlined text-outline">chevron_right</span></div>`;
+                } else {
+                    return `<div onclick="openFileItem('${item.folderId}','${item.id}')" class="flex items-center gap-md p-md bg-white rounded-xl border border-surface-variant hover:bg-surface transition-colors cursor-pointer">
+                        <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-secondary">${fileIcon(item.type)}</span></div>
+                        <div class="flex-1"><p class="font-label-md text-secondary font-bold">${item.name}</p><p class="font-label-sm text-on-surface-variant">${item.folderName} · ${item.size}</p></div>
+                        <span class="material-symbols-outlined text-outline">chevron_right</span></div>`;
+                }
+            }).join('');
         }
 
-        // Folder detail toggle
+        // ── Folder detail ────────────────────────────────────────────
         function openFolderDetail(folderId) {
             activeFolderId = folderId;
             const folders = NotesManager.getFolders();
             const folder = folders.find(f => f.id === folderId);
-            
-            if (folder) {
-                document.getElementById('folder-detail-title').innerText = folder.name;
-                document.getElementById('btn-add-note').onclick = () => openCreateNoteModal(folderId);
-                renderFolderNotes(folder);
-                document.getElementById('folder-detail-view').classList.remove('hidden');
-            }
+            if (!folder) return;
+            document.getElementById('folder-detail-title').innerText = folder.name;
+            document.getElementById('btn-add-note').onclick = () => openCreateNoteModal(folderId);
+            document.getElementById('btn-add-file').onclick = () => toggleFileModal(true);
+            renderFolderContents(folder);
+            document.getElementById('folder-detail-view').classList.remove('hidden');
         }
 
         function closeFolderDetail() {
@@ -331,31 +318,205 @@
             displayRecents();
         }
 
-        function renderFolderNotes(folder) {
+        function renderFolderContents(folder) {
             const container = document.getElementById('folder-notes-list');
-            if (folder.notes.length === 0) {
-                container.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-10 text-on-surface-variant">
-                        <span class="material-symbols-outlined text-5xl mb-2">note_add</span>
-                        <p class="font-bold">No notes in this folder</p>
-                        <p class="text-label-sm">Click "New Note" to add one.</p>
-                    </div>
-                `;
+            const files = folder.files || [];
+            const notes = folder.notes || [];
+            if (notes.length === 0 && files.length === 0) {
+                container.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-on-surface-variant">
+                    <span class="material-symbols-outlined text-5xl mb-2">folder_open</span>
+                    <p class="font-bold">Folder is empty</p>
+                    <p class="text-label-sm">Add notes or attach files using the buttons above.</p></div>`;
                 return;
             }
-
-            container.innerHTML = folder.notes.map(n => `
-                <div onclick="openEditNoteModal('${folder.id}', '${n.id}')" class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 hover:shadow-md transition-shadow cursor-pointer space-y-sm">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-headline-sm text-headline-sm text-primary font-bold">${n.title}</h4>
-                        <span class="text-on-surface-variant text-label-sm">${n.updatedTime}</span>
-                    </div>
-                    <p class="text-on-surface-variant text-body-md whitespace-pre-wrap">${n.content.substring(0, 120)}${n.content.length > 120 ? '...' : ''}</p>
-                </div>
-            `).join('');
+            let html = '';
+            // Files section
+            if (files.length > 0) {
+                html += `<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mt-2 mb-sm">Files (${files.length})</h4>`;
+                html += `<div class="grid grid-cols-2 gap-gutter mb-lg">` + files.map(file => {
+                    if (file.type && file.type.startsWith('image/')) {
+                        return `<div class="relative group rounded-xl overflow-hidden shadow-sm border border-surface-variant/40 cursor-pointer" onclick="viewImage('${file.data}')">
+                            <img src="${file.data}" class="attachment-img">
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-label-sm px-2 py-1 truncate">${file.name}</div>
+                            <button onclick="event.stopPropagation(); deleteFileFromFolder('${folder.id}','${file.id}')" class="absolute top-1 right-1 bg-error text-white rounded-full w-6 h-6 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                        </div>`;
+                    } else {
+                        return `<div class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 flex flex-col gap-xs group relative">
+                            <span class="material-symbols-outlined text-3xl text-secondary">${fileIcon(file.type)}</span>
+                            <p class="font-label-md text-on-surface font-bold truncate">${file.name}</p>
+                            <p class="font-label-sm text-on-surface-variant">${file.size}</p>
+                            <button onclick="deleteFileFromFolder('${folder.id}','${file.id}')" class="absolute top-1 right-1 bg-error text-white rounded-full w-6 h-6 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                        </div>`;
+                    }
+                }).join('') + `</div>`;
+            }
+            // Notes section
+            if (notes.length > 0) {
+                html += `<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mt-2 mb-sm">Notes (${notes.length})</h4>`;
+                html += notes.map(n => {
+                    const attachCount = (n.attachments || []).length;
+                    return `<div onclick="openEditNoteModal('${folder.id}','${n.id}')" class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 hover:shadow-md transition-shadow cursor-pointer space-y-sm mb-sm">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-headline-sm text-headline-sm text-primary font-bold">${n.title}</h4>
+                            <span class="text-on-surface-variant text-label-sm">${n.updatedTime}</span>
+                        </div>
+                        <p class="text-on-surface-variant text-body-md whitespace-pre-wrap">${n.content.substring(0,120)}${n.content.length > 120 ? '...' : ''}</p>
+                        ${attachCount > 0 ? `<div class="flex items-center gap-1 text-secondary text-label-sm"><span class="material-symbols-outlined text-[14px]">attach_file</span>${attachCount} attachment${attachCount > 1 ? 's' : ''}</div>` : ''}
+                    </div>`;
+                }).join('');
+            }
+            container.innerHTML = html;
         }
 
-        // Modal triggers
+        // ── File helpers ─────────────────────────────────────────────
+        function fileIcon(mimeType) {
+            if (!mimeType) return 'insert_drive_file';
+            if (mimeType.startsWith('image/')) return 'image';
+            if (mimeType === 'application/pdf') return 'picture_as_pdf';
+            if (mimeType.includes('word')) return 'description';
+            if (mimeType.includes('sheet') || mimeType.includes('excel')) return 'table_chart';
+            if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return 'slideshow';
+            return 'insert_drive_file';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ── Folder-level file attach ─────────────────────────────────
+        function toggleFileModal(show) {
+            document.getElementById('file-modal').classList.toggle('hidden', !show);
+            if (!show) { pendingFolderFiles = []; document.getElementById('file-preview-list').innerHTML = ''; }
+        }
+
+        async function handleFolderFileSelect(event) {
+            await processFilesForFolder(Array.from(event.target.files));
+            event.target.value = '';
+        }
+
+        async function handleFolderFileDrop(event) {
+            event.preventDefault();
+            document.getElementById('file-drop-zone').classList.remove('drag-over');
+            await processFilesForFolder(Array.from(event.dataTransfer.files));
+        }
+
+        async function processFilesForFolder(fileList) {
+            const preview = document.getElementById('file-preview-list');
+            for (const file of fileList) {
+                const isImage = file.type.startsWith('image/');
+                // For images store base64; for others store name/size only (too large for localStorage if big)
+                let data = null;
+                if (isImage && file.size < 2 * 1024 * 1024) { // images under 2MB stored as base64
+                    data = await readFileAsBase64(file);
+                }
+                const entry = { id: 'file_' + Date.now() + Math.random(), name: file.name, type: file.type, size: formatFileSize(file.size), data };
+                pendingFolderFiles.push(entry);
+
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-sm p-sm bg-surface-container-low rounded-lg';
+                div.innerHTML = `
+                    <span class="material-symbols-outlined text-secondary text-xl">${fileIcon(file.type)}</span>
+                    <div class="flex-1 min-w-0"><p class="font-label-md truncate">${file.name}</p><p class="font-label-sm text-on-surface-variant">${formatFileSize(file.size)}</p></div>
+                    ${isImage && data ? `<img src="${data}" class="w-10 h-10 rounded-lg object-cover">` : ''}
+                `;
+                preview.appendChild(div);
+            }
+        }
+
+        function confirmFileUpload() {
+            if (pendingFolderFiles.length === 0) { toggleFileModal(false); return; }
+            const folders = NotesManager.getFolders();
+            const folder = folders.find(f => f.id === activeFolderId);
+            if (!folder) return;
+            if (!folder.files) folder.files = [];
+            pendingFolderFiles.forEach(f => folder.files.push(f));
+            NotesManager.saveFolders(folders);
+            toggleFileModal(false);
+            renderFolderContents(folder);
+            displayFolders();
+        }
+
+        function deleteFileFromFolder(folderId, fileId) {
+            const folders = NotesManager.getFolders();
+            const folder = folders.find(f => f.id === folderId);
+            if (!folder || !folder.files) return;
+            folder.files = folder.files.filter(f => f.id !== fileId);
+            NotesManager.saveFolders(folders);
+            renderFolderContents(folder);
+            displayFolders();
+        }
+
+        function openFileItem(folderId, fileId) {
+            const folders = NotesManager.getFolders();
+            const folder = folders.find(f => f.id === folderId);
+            if (!folder) return;
+            const file = (folder.files || []).find(f => f.id === fileId);
+            if (!file) return;
+            if (file.data && file.type && file.type.startsWith('image/')) {
+                viewImage(file.data);
+            } else {
+                alert(`File: ${file.name}\nSize: ${file.size}\n\nThis file type cannot be previewed in-app.`);
+            }
+        }
+
+        // ── Image viewer ─────────────────────────────────────────────
+        function viewImage(src) {
+            document.getElementById('viewer-img').src = src;
+            document.getElementById('image-viewer').classList.remove('hidden');
+        }
+        function closeImageViewer() {
+            document.getElementById('image-viewer').classList.add('hidden');
+        }
+
+        // ── Note attachments ─────────────────────────────────────────
+        function triggerNoteFileInput() {
+            document.getElementById('note-file-input').click();
+        }
+
+        async function handleNoteFileAttach(event) {
+            const files = Array.from(event.target.files);
+            for (const file of files) {
+                const isImage = file.type.startsWith('image/');
+                let data = null;
+                if (isImage && file.size < 2 * 1024 * 1024) {
+                    data = await readFileAsBase64(file);
+                }
+                pendingNoteAttachments.push({ id: 'att_' + Date.now() + Math.random(), name: file.name, type: file.type, size: formatFileSize(file.size), data });
+            }
+            renderNoteAttachmentPreview();
+            event.target.value = '';
+        }
+
+        function renderNoteAttachmentPreview() {
+            const container = document.getElementById('note-attachments-preview');
+            container.innerHTML = pendingNoteAttachments.map((att, i) => {
+                if (att.data && att.type.startsWith('image/')) {
+                    return `<div class="relative group"><img src="${att.data}" class="attachment-img">
+                        <button type="button" onclick="removeNoteAttachment(${i})" class="absolute top-1 right-1 bg-error text-white rounded-full w-6 h-6 text-xs flex items-center justify-center">✕</button></div>`;
+                }
+                return `<div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg relative group">
+                    <span class="material-symbols-outlined text-secondary">${fileIcon(att.type)}</span>
+                    <div class="flex-1 min-w-0"><p class="font-label-md truncate">${att.name}</p><p class="font-label-sm text-on-surface-variant">${att.size}</p></div>
+                    <button type="button" onclick="removeNoteAttachment(${i})" class="text-error font-bold">✕</button></div>`;
+            }).join('');
+        }
+
+        function removeNoteAttachment(index) {
+            pendingNoteAttachments.splice(index, 1);
+            renderNoteAttachmentPreview();
+        }
+
+        // ── Folder modal ─────────────────────────────────────────────
         function toggleFolderModal(show) {
             document.getElementById('folder-modal').classList.toggle('hidden', !show);
         }
@@ -363,30 +524,29 @@
         function submitNewFolder() {
             const name = document.getElementById('folder-name-input').value.trim();
             if (!name) return;
-
             const colorRadios = document.getElementsByName('folder-color');
             let color = "primary";
-            for (const r of colorRadios) {
-                if (r.checked) color = r.value;
-            }
-
+            for (const r of colorRadios) { if (r.checked) color = r.value; }
             NotesManager.addFolder(name, color);
             document.getElementById('folder-name-input').value = '';
             toggleFolderModal(false);
             displayFolders();
         }
 
-        // Note editor triggers
+        // ── Note modal ───────────────────────────────────────────────
         function toggleNoteModal(show) {
             document.getElementById('note-modal').classList.toggle('hidden', !show);
+            if (!show) { pendingNoteAttachments = []; document.getElementById('note-attachments-preview').innerHTML = ''; }
         }
 
         function openCreateNoteModal(folderId) {
             activeFolderId = folderId;
             editingNoteId = null;
+            pendingNoteAttachments = [];
             document.getElementById('note-modal-header').innerText = "Create New Note";
             document.getElementById('note-title-input').value = "";
             document.getElementById('note-content-input').value = "";
+            document.getElementById('note-attachments-preview').innerHTML = '';
             document.getElementById('btn-delete-note').classList.add('hidden');
             toggleNoteModal(true);
         }
@@ -394,112 +554,87 @@
         function openEditNoteModal(folderId, noteId) {
             activeFolderId = folderId;
             editingNoteId = noteId;
-            
             const folders = NotesManager.getFolders();
             const folder = folders.find(f => f.id === folderId);
             const note = folder ? folder.notes.find(n => n.id === noteId) : null;
-            
-            if (note) {
-                document.getElementById('note-modal-header').innerText = "Edit Note";
-                document.getElementById('note-title-input').value = note.title;
-                document.getElementById('note-content-input').value = note.content;
-                
-                const btnDelete = document.getElementById('btn-delete-note');
-                btnDelete.classList.remove('hidden');
-                btnDelete.onclick = deleteActiveNote;
-                
-                toggleNoteModal(true);
-            }
+            if (!note) return;
+            pendingNoteAttachments = note.attachments ? [...note.attachments] : [];
+            document.getElementById('note-modal-header').innerText = "Edit Note";
+            document.getElementById('note-title-input').value = note.title;
+            document.getElementById('note-content-input').value = note.content;
+            renderNoteAttachmentPreview();
+            const btnDelete = document.getElementById('btn-delete-note');
+            btnDelete.classList.remove('hidden');
+            btnDelete.onclick = deleteActiveNote;
+            toggleNoteModal(true);
         }
 
         function submitNote() {
             const title = document.getElementById('note-title-input').value.trim();
             const content = document.getElementById('note-content-input').value.trim();
             if (!title) return;
-
             const folders = NotesManager.getFolders();
             const folder = folders.find(f => f.id === activeFolderId);
-
             if (editingNoteId) {
-                // Update
                 const note = folder.notes.find(n => n.id === editingNoteId);
-                if (note) {
-                    note.title = title;
-                    note.content = content;
-                    note.updatedTime = "Just now";
-                }
+                if (note) { note.title = title; note.content = content; note.updatedTime = "Just now"; note.attachments = [...pendingNoteAttachments]; }
             } else {
-                // Create
-                folder.notes.unshift({
-                    id: "note_" + Date.now(),
-                    title: title,
-                    content: content,
-                    updatedTime: "Just now"
-                });
+                folder.notes.unshift({ id: "note_" + Date.now(), title, content, updatedTime: "Just now", attachments: [...pendingNoteAttachments] });
             }
-
             NotesManager.saveFolders(folders);
             toggleNoteModal(false);
-            
-            // Re-render
-            const folderDetailView = document.getElementById('folder-detail-view');
-            if (!folderDetailView.classList.contains('hidden')) {
-                renderFolderNotes(folder);
+            if (!document.getElementById('folder-detail-view').classList.contains('hidden')) {
+                renderFolderContents(folder);
             } else {
-                displayFolders();
-                displayRecents();
+                displayFolders(); displayRecents();
             }
         }
 
         function deleteActiveNote() {
-            if (confirm("Are you sure you want to delete this note?")) {
+            if (confirm("Delete this note?")) {
                 NotesManager.deleteNote(activeFolderId, editingNoteId);
                 toggleNoteModal(false);
                 const folders = NotesManager.getFolders();
                 const folder = folders.find(f => f.id === activeFolderId);
-                renderFolderNotes(folder);
+                renderFolderContents(folder);
             }
         }
 
-        // Search Filter
+        // ── Search ───────────────────────────────────────────────────
         function filterNotes() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const folders = NotesManager.getFolders();
-            const list = document.getElementById('recent-notes-list');
             const recentSection = document.getElementById('recent-section');
-
-            if (!query) {
-                displayFolders();
-                displayRecents();
-                recentSection.classList.remove('hidden');
-                return;
-            }
-
-            // Search matches
+            if (!query) { displayFolders(); displayRecents(); recentSection.classList.remove('hidden'); return; }
             let results = [];
             folders.forEach(f => {
                 f.notes.forEach(n => {
-                    if (n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query)) {
-                        results.push({ ...n, folderId: f.id, folderName: f.name });
-                    }
+                    if (n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query))
+                        results.push({ kind: 'note', ...n, folderId: f.id, folderName: f.name });
+                });
+                (f.files || []).forEach(file => {
+                    if (file.name.toLowerCase().includes(query))
+                        results.push({ kind: 'file', ...file, folderId: f.id, folderName: f.name });
                 });
             });
-
-            recentSection.classList.add('hidden'); // Hide default folders and recents
+            recentSection.classList.add('hidden');
             const grid = document.getElementById('folders-grid');
-            
             if (results.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-10 text-on-surface-variant text-label-md">No search matches found.</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center py-10 text-on-surface-variant text-label-md">No matches found.</div>`;
                 return;
             }
-
-            grid.innerHTML = results.map(n => `
-                <div onclick="openEditNoteModal('${n.folderId}', '${n.id}')" class="bg-white rounded-xl p-md border border-surface-variant/40 hover:shadow-md cursor-pointer col-span-2 space-y-xs">
-                    <h4 class="font-headline-sm text-primary font-bold">${n.title}</h4>
-                    <p class="text-on-surface-variant text-label-sm">${n.folderName} • ${n.updatedTime}</p>
-                    <p class="text-on-surface-variant text-body-md">${n.content.substring(0, 100)}...</p>
-                </div>
-            `).join('');
+            grid.innerHTML = results.map(item => {
+                if (item.kind === 'note') {
+                    return `<div onclick="openEditNoteModal('${item.folderId}','${item.id}')" class="bg-white rounded-xl p-md border border-surface-variant/40 hover:shadow-md cursor-pointer col-span-2 space-y-xs">
+                        <h4 class="font-headline-sm text-primary font-bold">${item.title}</h4>
+                        <p class="text-on-surface-variant text-label-sm">${item.folderName} · ${item.updatedTime}</p>
+                        <p class="text-on-surface-variant text-body-md">${item.content.substring(0, 100)}...</p></div>`;
+                } else {
+                    return `<div onclick="openFileItem('${item.folderId}','${item.id}')" class="bg-white rounded-xl p-md border border-surface-variant/40 hover:shadow-md cursor-pointer col-span-2 flex items-center gap-sm">
+                        <span class="material-symbols-outlined text-2xl text-secondary">${fileIcon(item.type)}</span>
+                        <div><p class="font-label-md text-secondary font-bold">${item.name}</p><p class="font-label-sm text-on-surface-variant">${item.folderName} · ${item.size}</p></div></div>`;
+                }
+            }).join('');
         }
 
         window.addEventListener('DOMContentLoaded', () => {

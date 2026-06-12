@@ -1,115 +1,12 @@
 // TimeFlow Local Storage and Data Helper
 
-// Default Seed Data
-const DEFAULT_FOLDERS = [
-    {
-        id: "folder_1",
-        name: "Database Mgmt",
-        color: "secondary", // electric blue
-        notes: [
-            { id: "note_11", title: "Final Exam Review", content: "Review indexing, B-Trees, transaction isolation levels (ACID), and normalization (1NF, 2NF, 3NF, BCNF). Make sure to practice SQL query optimization queries.", updatedTime: "2 hours ago" },
-            { id: "note_12", title: "SQL Query Optimization", content: "Use EXPLAIN to analyze query execution plan. Avoid SELECT *, use indexes on frequently queried columns. Focus on JOIN performance.", updatedTime: "3 days ago" }
-        ]
-    },
-    {
-        id: "folder_2",
-        name: "Discrete Math",
-        color: "primary", // deep indigo
-        notes: [
-            { id: "note_21", title: "Boolean Algebra Basics", content: "De Morgan's Laws:\n1) NOT (A AND B) = (NOT A) OR (NOT B)\n2) NOT (A OR B) = (NOT A) AND (NOT B)\n\nTruth tables are essential for validation.", updatedTime: "Yesterday" }
-        ]
-    },
-    {
-        id: "folder_3",
-        name: "Cloud Computing",
-        color: "tertiary", // mint green / dark teal
-        notes: [
-            { id: "note_31", title: "SaaS vs PaaS vs IaaS", content: "IaaS: Infrastructure (AWS EC2, GCE)\nPaaS: Platform (Heroku, App Engine)\nSaaS: Software (Gmail, Salesforce)\n\nShared responsibility model is critical.", updatedTime: "3 days ago" }
-        ]
-    },
-    {
-        id: "folder_4",
-        name: "Capstone Proj",
-        color: "error", // red / coral
-        notes: [
-            { id: "note_41", title: "Project Milestones", content: "Milestone 1: UI/UX Wireframes & System Architecture (Done)\nMilestone 2: Database schema setup & core API development\nMilestone 3: Frontend-Backend integration & local testing", updatedTime: "5 min ago" }
-        ]
-    }
-];
-
-const DEFAULT_TIMETABLE = [
-    {
-        id: "class_1",
-        subject: "Database Mgmt",
-        instructor: "Dr. Sarah Jenkins",
-        room: "Lab 402",
-        day: "Mon",
-        startTime: "09:00 AM",
-        endTime: "10:45 AM",
-        color: "primary"
-    },
-    {
-        id: "class_2",
-        subject: "Discrete Math",
-        instructor: "Prof. Alan Turing",
-        room: "Hall B",
-        day: "Mon",
-        startTime: "11:00 AM",
-        endTime: "12:00 PM",
-        color: "secondary"
-    },
-    {
-        id: "class_3",
-        subject: "Cloud Computing",
-        instructor: "Dr. Aris Thorne",
-        room: "Auditorium B",
-        day: "Mon",
-        startTime: "01:00 PM",
-        endTime: "02:30 PM",
-        color: "tertiary"
-    },
-    {
-        id: "class_4",
-        subject: "Data Structures",
-        instructor: "Dr. Sarah Jenkins",
-        room: "Lab 402",
-        day: "Tue",
-        startTime: "11:30 AM",
-        endTime: "01:00 PM",
-        color: "primary"
-    },
-    {
-        id: "class_5",
-        subject: "Linear Algebra",
-        instructor: "Prof. Alan Turing",
-        room: "Hall B",
-        day: "Tue",
-        startTime: "02:00 PM",
-        endTime: "03:00 PM",
-        color: "secondary"
-    }
-];
-
-const DEFAULT_ATTENDANCE = [
-    { subject: "Database Mgmt", attended: 18, total: 22, required: 75 },
-    { subject: "Discrete Math", attended: 14, total: 20, required: 75 },
-    { subject: "Cloud Computing", attended: 12, total: 14, required: 75 },
-    { subject: "Data Structures", attended: 15, total: 18, required: 75 },
-    { subject: "Linear Algebra", attended: 10, total: 15, required: 75 }
-];
-
-const DEFAULT_ASSIGNMENTS = [
-    { id: "assign_1", title: "Normalization Practice Set", subject: "Database Mgmt", dueDate: "2026-06-19", completed: false },
-    { id: "assign_2", title: "De Morgan's Proof Draft", subject: "Discrete Math", dueDate: "2026-06-21", completed: false },
-    { id: "assign_3", title: "Deploy Docker Container", subject: "Cloud Computing", dueDate: "2026-06-15", completed: true },
-    { id: "assign_4", title: "Red-Black Tree Implementation", subject: "Data Structures", dueDate: "2026-06-25", completed: false }
-];
-
-const DEFAULT_GPA = [
-    { semester: "Semester 1", gpa: 3.8 },
-    { semester: "Semester 2", gpa: 3.9 },
-    { semester: "Semester 3", gpa: 3.75 }
-];
+// Default Seed Data — empty on first launch, user fills their own data
+const DEFAULT_FOLDERS = [];
+const DEFAULT_TIMETABLE = [];
+const DEFAULT_ATTENDANCE = [];
+const DEFAULT_ASSIGNMENTS = [];
+const DEFAULT_GPA = [];
+const DEFAULT_SUBJECTS = [];
 
 // Helper functions for reading and writing data
 function getData(key, defaultVal) {
@@ -263,35 +160,81 @@ const GPAManager = {
     }
 };
 
+const SubjectManager = {
+    // { id, name, color, credits }
+    getSubjects: () => getData("tf_subjects", DEFAULT_SUBJECTS),
+    saveSubjects: (subjects) => saveData("tf_subjects", subjects),
+    addSubject: (name, color = "primary", credits = 3) => {
+        const subjects = SubjectManager.getSubjects();
+        if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase())) return null; // no duplicate
+        const s = { id: "sub_" + Date.now(), name, color, credits };
+        subjects.push(s);
+        SubjectManager.saveSubjects(subjects);
+        // Auto-create attendance record
+        const attendance = AttendanceManager.getAttendance();
+        if (!attendance.find(a => a.subject.toLowerCase() === name.toLowerCase())) {
+            attendance.push({ subject: name, attended: 0, total: 0, required: 75 });
+            AttendanceManager.saveAttendance(attendance);
+        }
+        return s;
+    },
+    deleteSubject: (id) => {
+        const subjects = SubjectManager.getSubjects().filter(s => s.id !== id);
+        SubjectManager.saveSubjects(subjects);
+    }
+};
+
+// Live Clock — call renderClock('elementId') on any page to show a ticking clock
+function renderClock(elementId) {
+    function tick() {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const hStr = hours.toString().padStart(2, '0');
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const dayName = days[now.getDay()];
+        const dateStr = `${dayName}, ${months[now.getMonth()]} ${now.getDate()}`;
+        el.innerHTML = `
+            <span class="font-display-lg-mobile text-display-lg-mobile text-primary leading-none">${hStr}:${minutes}<span class="text-secondary">:${seconds}</span> <span class="text-headline-sm text-on-surface-variant">${ampm}</span></span>
+            <span class="font-label-md text-label-md text-on-surface-variant">${dateStr}</span>
+        `;
+    }
+    tick();
+    setInterval(tick, 1000);
+}
+
 // Global Navigation Component Injector (Ensures all pages have working, synchronized navigation)
 function renderGlobalNavbar(activeTab) {
     const navbarHTML = `
-    <!-- BottomNavBar -->
-    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-lowest dark:bg-inverse-surface z-[100] rounded-t-xl shadow-[0_-4px_20px_rgba(21,21,125,0.08)]">
-        <!-- Home -->
-        <a class="flex flex-col items-center justify-center ${activeTab === 'home' ? 'bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed' : 'text-on-surface-variant dark:text-outline-variant'} rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="dashboard.html">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${activeTab === 'home' ? 1 : 0};">dashboard</span>
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-lowest z-[100] rounded-t-xl shadow-[0_-4px_20px_rgba(21,21,125,0.08)]">
+        <a class="flex flex-col items-center justify-center ${activeTab === 'home' ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant'} rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="dashboard.html">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${activeTab==='home'?1:0};">dashboard</span>
             <span class="font-label-sm text-label-sm">Home</span>
         </a>
-        <!-- Timetable -->
-        <a class="flex flex-col items-center justify-center ${activeTab === 'timetable' ? 'bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed' : 'text-on-surface-variant dark:text-outline-variant'} rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="timetable.html">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${activeTab === 'timetable' ? 1 : 0};">calendar_view_week</span>
-            <span class="font-label-sm text-label-sm">Timetable</span>
+        <a class="flex flex-col items-center justify-center ${activeTab === 'subjects' ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant'} rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="subjects.html">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${activeTab==='subjects'?1:0};">menu_book</span>
+            <span class="font-label-sm text-label-sm">Subjects</span>
         </a>
-        <!-- Tracker -->
-        <a class="flex flex-col items-center justify-center ${activeTab === 'tracker' ? 'bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed' : 'text-on-surface-variant dark:text-outline-variant'} rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="tracker.html">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${activeTab === 'tracker' ? 1 : 0};">query_stats</span>
+        <a class="flex flex-col items-center justify-center ${activeTab === 'timetable' ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant'} rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="timetable.html">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${activeTab==='timetable'?1:0};">calendar_view_week</span>
+            <span class="font-label-sm text-label-sm">Schedule</span>
+        </a>
+        <a class="flex flex-col items-center justify-center ${activeTab === 'tracker' ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant'} rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="tracker.html">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${activeTab==='tracker'?1:0};">query_stats</span>
             <span class="font-label-sm text-label-sm">Tracker</span>
         </a>
-        <!-- Tools -->
-        <a class="flex flex-col items-center justify-center ${['notes', 'gpa', 'assignments'].includes(activeTab) ? 'bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed' : 'text-on-surface-variant dark:text-outline-variant'} rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="notes.html">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${['notes', 'gpa', 'assignments'].includes(activeTab) ? 1 : 0};">construction</span>
+        <a class="flex flex-col items-center justify-center ${['notes','gpa','assignments'].includes(activeTab) ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant'} rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="notes.html">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${['notes','gpa','assignments'].includes(activeTab)?1:0};">construction</span>
             <span class="font-label-sm text-label-sm">Tools</span>
         </a>
     </nav>
     `;
-    
-    // Inject the navbar into the document body or footer
     const existingNav = document.querySelector('nav') || document.querySelector('footer');
     if (existingNav) {
         existingNav.outerHTML = navbarHTML;

@@ -128,16 +128,17 @@
             <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">TimeFlow</h1>
         </div>
         <div class="flex items-center gap-3">
-            <span class="font-label-md text-on-surface-variant">User Account</span>
-            <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold">A</div>
+            <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-sm">TF</div>
         </div>
     </header>
 
     <main class="px-margin-mobile pt-sm space-y-lg">
-        <!-- Welcome Message -->
-        <section class="space-y-xs">
-            <p class="font-body-md text-on-surface-variant">Welcome back,</p>
-            <h2 class="font-headline-md text-headline-md text-primary">Alex Chen</h2>
+        <!-- Live Clock + Welcome -->
+        <section class="bg-surface-container-lowest rounded-2xl p-lg shadow-[0_4px_20px_rgba(21,21,125,0.06)] flex flex-col gap-xs">
+            <div id="live-clock" class="flex flex-col gap-xs">
+                <!-- Populated by renderClock() -->
+            </div>
+            <p class="font-body-md text-on-surface-variant mt-1">Have a productive day! 🎓</p>
         </section>
 
         <!-- Current Status: Today's Schedule -->
@@ -196,24 +197,6 @@
             </div>
         </section>
 
-        <!-- Focus Mode Entry -->
-        <section>
-            <div class="bg-secondary-container rounded-2xl p-lg relative overflow-hidden group">
-                <div class="absolute -right-8 -bottom-8 opacity-20 group-hover:scale-110 transition-transform duration-500">
-                    <span class="material-symbols-outlined text-[140px] text-on-secondary-container">bolt</span>
-                </div>
-                <div class="relative z-10 flex flex-col gap-sm">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
-                        <span id="focus-streak" class="font-label-md text-on-secondary-container">0 Day Focus Streak</span>
-                    </div>
-                    <h3 class="font-display-lg-mobile text-display-lg-mobile text-on-secondary-container">Ready to deep work?</h3>
-                    <button id="btn-focus" class="bg-on-secondary-container text-secondary-container font-headline-sm py-3 px-6 rounded-xl self-start mt-2 shadow-lg active:scale-95 transition-transform">
-                        Start Study Focus
-                    </button>
-                </div>
-            </div>
-        </section>
 
         <!-- Upcoming Classes -->
         <section class="space-y-md">
@@ -234,45 +217,8 @@
         // Set Active Nav Tab
         renderGlobalNavbar('home');
 
-        // Initialize Streaks
-        let streak = parseInt(localStorage.getItem('tf_focus_streak') || '0');
-        if (streak === 0) {
-            streak = 4; // Seed with default
-            localStorage.setItem('tf_focus_streak', '4');
-        }
-        document.getElementById('focus-streak').innerText = `${streak} Day Focus Streak`;
-
-        // Focus Button Logic
-        const btnFocus = document.getElementById('btn-focus');
-        let timer = null;
-        let elapsed = 0;
-        btnFocus.addEventListener('click', function() {
-            if (timer) {
-                // Stop timer
-                clearInterval(timer);
-                timer = null;
-                btnFocus.innerHTML = "Start Study Focus";
-                btnFocus.className = "bg-on-secondary-container text-secondary-container font-headline-sm py-3 px-6 rounded-xl self-start mt-2 shadow-lg active:scale-95 transition-transform";
-                // Increment Streak on session end
-                streak++;
-                localStorage.setItem('tf_focus_streak', streak.toString());
-                document.getElementById('focus-streak').innerText = `${streak} Day Focus Streak`;
-            } else {
-                btnFocus.innerHTML = "Session Starting...";
-                setTimeout(() => {
-                    elapsed = 0;
-                    btnFocus.innerHTML = "Focusing (00:00)";
-                    btnFocus.className = "bg-tertiary-container text-on-tertiary font-headline-sm py-3 px-6 rounded-xl self-start mt-2 shadow-lg active:scale-95 transition-transform";
-                    
-                    timer = setInterval(() => {
-                        elapsed++;
-                        const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
-                        const secs = (elapsed % 60).toString().padStart(2, '0');
-                        btnFocus.innerHTML = `Focusing (${mins}:${secs}) - Stop`;
-                    }, 1000);
-                }, 800);
-            }
-        });
+        // Start live clock
+        renderClock('live-clock');
 
         // Load Dynamic Data
         function loadDashboard() {
@@ -305,14 +251,15 @@
                 }
             });
 
-            const avgPct = totalClasses > 0 ? Math.round((totalAttended / totalClasses) * 100) : 85;
-            document.getElementById('attendance-pct').innerText = `${avgPct}%`;
-            
-            // Progress ring circumference is 2 * pi * r = 2 * 3.14159 * 15.9155 = 100
+            const avgPct = totalClasses > 0 ? Math.round((totalAttended / totalClasses) * 100) : 0;
+            document.getElementById('attendance-pct').innerText = totalClasses > 0 ? `${avgPct}%` : '--';
             document.getElementById('attendance-ring').setAttribute('stroke-dasharray', `${avgPct}, 100`);
             
             const attendanceStatus = document.getElementById('attendance-status');
-            if (avgPct >= 75) {
+            if (totalClasses === 0) {
+                attendanceStatus.innerText = "No data yet";
+                attendanceStatus.className = "font-label-sm text-label-sm text-on-surface-variant";
+            } else if (avgPct >= 75) {
                 attendanceStatus.innerText = "Safe Margin";
                 attendanceStatus.className = "font-label-sm text-label-sm text-on-tertiary-container";
             } else {

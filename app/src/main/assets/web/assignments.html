@@ -156,26 +156,37 @@
     </main>
 
     <!-- Create Assignment Modal -->
-    <div id="assign-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-center justify-center p-md">
-        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-lg space-y-md">
+    <div id="assign-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-end justify-center">
+        <div class="bg-white rounded-t-3xl w-full max-w-sm shadow-2xl p-lg pb-10 space-y-md">
             <h3 class="font-headline-sm text-headline-sm text-primary">Create Assignment</h3>
-            <div>
-                <label class="block font-label-md text-on-surface-variant mb-1">Task / Title</label>
-                <input type="text" id="assign-title" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="e.g. Write Review Draft">
+
+            <!-- No subjects warning -->
+            <div id="assign-no-subjects" class="hidden flex-col items-center text-center py-4 gap-sm">
+                <span class="material-symbols-outlined text-4xl text-outline">menu_book</span>
+                <p class="font-label-md text-on-surface-variant mt-sm">No subjects added yet.</p>
+                <a href="subjects.html" class="mt-sm bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl active:scale-95 transition-all inline-block">
+                    Go Add Subjects First
+                </a>
             </div>
-            <div>
-                <label class="block font-label-md text-on-surface-variant mb-1">Subject</label>
-                <select id="assign-subject" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4">
-                    <!-- Populated via script based on unique classes -->
-                </select>
-            </div>
-            <div>
-                <label class="block font-label-md text-on-surface-variant mb-1">Due Date</label>
-                <input type="date" id="assign-date" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4">
-            </div>
-            <div class="flex justify-end gap-md pt-2">
-                <button onclick="toggleAssignModal(false)" class="text-on-surface-variant font-label-md">Cancel</button>
-                <button onclick="submitNewAssignment()" class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl">Create</button>
+
+            <div id="assign-form-body" class="space-y-md">
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Task / Title</label>
+                    <input type="text" id="assign-title" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="e.g. Write Review Draft">
+                </div>
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Subject</label>
+                    <select id="assign-subject" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 font-label-md">
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Due Date</label>
+                    <input type="date" id="assign-date" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4">
+                </div>
+                <div class="flex justify-end gap-md pt-2">
+                    <button onclick="toggleAssignModal(false)" class="text-on-surface-variant font-label-md">Cancel</button>
+                    <button onclick="submitNewAssignment()" class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl">Create</button>
+                </div>
             </div>
         </div>
     </div>
@@ -192,16 +203,22 @@
         function toggleAssignModal(show) {
             document.getElementById('assign-modal').classList.toggle('hidden', !show);
             if (show) {
-                // Populate subject options
-                const select = document.getElementById('assign-subject');
-                const classes = TimetableManager.getClasses();
-                const uniqueSubjects = [...new Set(classes.map(c => c.subject))];
-                if (uniqueSubjects.length === 0) {
-                    uniqueSubjects.push("General Study", "Database Mgmt", "Discrete Math", "Cloud Computing");
+                // Populate subject options from SubjectManager (same source as timetable)
+                const select   = document.getElementById('assign-subject');
+                const noSubMsg = document.getElementById('assign-no-subjects');
+                const formBody = document.getElementById('assign-form-body');
+                const subjects = SubjectManager.getSubjects();
+
+                if (subjects.length === 0) {
+                    noSubMsg.classList.remove('hidden');
+                    formBody.classList.add('hidden');
+                } else {
+                    noSubMsg.classList.add('hidden');
+                    formBody.classList.remove('hidden');
+                    select.innerHTML = subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
                 }
-                select.innerHTML = uniqueSubjects.map(s => `<option value="${s}">${s}</option>`).join('');
-                
-                // Set default date to today + 3 days
+
+                // Default date = today + 3 days
                 const dateInput = document.getElementById('assign-date');
                 const defaultDate = new Date();
                 defaultDate.setDate(defaultDate.getDate() + 3);
@@ -233,18 +250,20 @@
             document.getElementById('pending-count').innerText = pending.length;
 
             if (pending.length === 0) {
-                activeList.innerHTML = `<p class="text-on-surface-variant text-center py-4 text-label-md">No pending assignments!</p>`;
+                activeList.innerHTML = `<p class="text-on-surface-variant text-center py-4 text-label-md">No pending assignments! 🎉</p>`;
             } else {
-                activeList.innerHTML = pending.map(a => `
+                activeList.innerHTML = pending.map(a => {
+                    const badge = dueBadge(a.dueDate);
+                    return `
                     <div class="flex items-center gap-md p-md bg-white rounded-xl border border-surface-variant hover:bg-surface transition-colors">
                         <input type="checkbox" onclick="toggleTask('${a.id}')" class="rounded border-outline-variant text-primary focus:ring-primary w-5 h-5 cursor-pointer">
                         <div class="flex-grow ml-1">
                             <h4 class="font-headline-sm text-headline-sm text-primary font-bold leading-tight">${a.title}</h4>
                             <p class="text-on-surface-variant text-label-sm mt-0.5">${a.subject} • Due: ${formatDate(a.dueDate)}</p>
                         </div>
-                        <span class="px-2 py-0.5 bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">Due Soon</span>
-                    </div>
-                `).join('');
+                        <span class="px-2 py-0.5 rounded-lg font-label-sm text-label-sm ${badge.cls}">${badge.label}</span>
+                    </div>`;
+                }).join('');
             }
 
             if (completed.length === 0) {
@@ -266,6 +285,17 @@
         function toggleTask(id) {
             AssignmentManager.toggleAssignment(id);
             loadAssignments();
+        }
+
+        function dueBadge(dateStr) {
+            const today = new Date(); today.setHours(0,0,0,0);
+            const due   = new Date(dateStr); due.setHours(0,0,0,0);
+            const diff  = Math.round((due - today) / (1000 * 60 * 60 * 24));
+            if (diff < 0)  return { label: 'Overdue',   cls: 'bg-error text-on-error' };
+            if (diff === 0) return { label: 'Due Today', cls: 'bg-error-container text-on-error-container font-bold' };
+            if (diff <= 2) return { label: `${diff}d left`, cls: 'bg-error-container text-on-error-container' };
+            if (diff <= 7) return { label: `${diff}d left`, cls: 'bg-tertiary-fixed text-on-tertiary-fixed' };
+            return { label: `${diff}d left`, cls: 'bg-surface-container text-on-surface-variant' };
         }
 
         function formatDate(dateStr) {

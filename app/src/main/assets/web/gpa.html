@@ -130,7 +130,7 @@
         <section class="bg-primary p-lg rounded-xl text-on-primary shadow-md flex justify-between items-center">
             <div>
                 <h3 class="font-label-md text-primary-fixed-dim uppercase tracking-wider">Estimated CGPA</h3>
-                <h2 id="overall-cgpa" class="font-display-lg text-display-lg font-bold">3.83</h2>
+                <h2 id="overall-cgpa" class="font-display-lg text-display-lg font-bold">--</h2>
             </div>
             <span class="material-symbols-outlined text-5xl opacity-20">calculate</span>
         </section>
@@ -263,7 +263,7 @@
 
             let totalGPA = 0;
             history.forEach(h => totalGPA += h.gpa);
-            const cgpa = history.length > 0 ? (totalGPA / history.length).toFixed(2) : "3.80";
+            const cgpa = history.length > 0 ? (totalGPA / history.length).toFixed(2) : "--";
             document.getElementById('overall-cgpa').innerText = cgpa;
 
             container.innerHTML = history.map((h, index) => `
@@ -278,10 +278,8 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Seed 3 default rows initially
-            addCourseRow("Database Management Systems", 4, "A");
-            addCourseRow("Discrete Mathematics", 3, "B+");
-            addCourseRow("Cloud Computing", 3, "A-");
+            // Start with one blank row
+            addCourseRow();
             loadGPAHistory();
         });
     </script>
