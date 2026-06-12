@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <title>TimeFlow - Quick Notes</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#00bfa2",
+                        "inverse-primary": "#c0c1ff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#00201a",
+                        "surface-dim": "#d9dadb",
+                        "surface": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#005143",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#191c1d",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary-fixed": "#001a41",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "tertiary-fixed-dim": "#2cdebf",
+                        "secondary-container": "#0070ea",
+                        "primary-fixed": "#e1e0ff",
+                        "primary-container": "#2e3192",
+                        "surface-container-low": "#f3f4f5",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#fefcff",
+                        "tertiary-fixed": "#58fbda",
+                        "surface-container-highest": "#e1e3e4",
+                        "inverse-surface": "#2e3132",
+                        "tertiary": "#002f26",
+                        "secondary": "#0059bb",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e1e3e4",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-fixed-variant": "#004493",
+                        "on-primary-container": "#9da1ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4f54b4",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "tertiary-container": "#00473b",
+                        "on-surface-variant": "#464652",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-fixed": "#04006d",
+                        "secondary-fixed-dim": "#adc7ff",
+                        "primary": "#15157d",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#d8e2ff",
+                        "surface-container": "#edeeef",
+                        "outline": "#777683",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "12px",
+                        "xl": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "700" }],
+                        "display-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c7c5d4;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+    <!-- TopAppBar -->
+    <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md px-margin-mobile py-sm">
+        <div class="flex justify-between items-center mb-sm">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-2xl">construction</span>
+                <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Academic Tools</h1>
+            </div>
+        </div>
+        <!-- Tool Switcher Sub-Navbar -->
+        <div class="flex border-b border-surface-variant gap-lg pb-1 text-label-md">
+            <a href="notes.html" class="text-primary font-bold border-b-2 border-primary pb-1">Notes</a>
+            <a href="assignments.html" class="text-on-surface-variant hover:text-primary pb-1">Assignments</a>
+            <a href="gpa.html" class="text-on-surface-variant hover:text-primary pb-1">GPA Calc</a>
+        </div>
+    </header>
+
+    <main class="px-margin-mobile pt-md space-y-lg">
+        <!-- Search Bar Section -->
+        <section class="relative">
+            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-outline">search</span>
+            </div>
+            <input id="search-input" oninput="filterNotes()" class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-secondary outline-none transition-all font-body-md text-on-surface placeholder:text-outline shadow-sm" placeholder="Search your notes..." type="text">
+        </section>
+
+        <!-- Bento Grid of Folders -->
+        <section>
+            <div class="flex justify-between items-center mb-md">
+                <h2 class="font-headline-sm text-headline-sm text-primary">Folders</h2>
+                <button onclick="toggleFolderModal(true)" class="text-secondary font-label-md hover:underline">+ New Folder</button>
+            </div>
+            <div id="folders-grid" class="grid grid-cols-2 gap-gutter">
+                <!-- Dynamically loaded folders -->
+            </div>
+        </section>
+
+        <!-- Recent Notes List -->
+        <section id="recent-section">
+            <h2 class="font-headline-sm text-headline-sm text-primary mb-md">Recent Notes</h2>
+            <div id="recent-notes-list" class="space-y-sm">
+                <!-- Dynamically loaded recent notes -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Folder Detail View overlay -->
+    <div id="folder-detail-view" class="fixed inset-0 z-[120] bg-background hidden flex flex-col p-margin-mobile pb-32 overflow-y-auto">
+        <header class="flex justify-between items-center py-sm mb-md">
+            <button onclick="closeFolderDetail()" class="flex items-center gap-1 text-primary font-label-md">
+                <span class="material-symbols-outlined">arrow_back</span> Back
+            </button>
+            <h2 id="folder-detail-title" class="font-headline-md text-headline-md text-primary">Folder Name</h2>
+            <button id="btn-add-note" class="bg-secondary text-on-secondary text-label-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">add</span> New Note
+            </button>
+        </header>
+        <div id="folder-notes-list" class="space-y-md">
+            <!-- Notes in active folder -->
+        </div>
+    </div>
+
+    <!-- Create Folder Modal -->
+    <div id="folder-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-center justify-center p-md">
+        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-lg space-y-md">
+            <h3 class="font-headline-sm text-headline-sm text-primary">Create Folder</h3>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Folder Name</label>
+                <input type="text" id="folder-name-input" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="e.g. Algorithms">
+            </div>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Color Theme</label>
+                <div class="flex gap-md pt-1">
+                    <label><input type="radio" name="folder-color" value="primary" checked> <span class="text-primary font-bold">Indigo</span></label>
+                    <label><input type="radio" name="folder-color" value="secondary"> <span class="text-secondary font-bold">Blue</span></label>
+                    <label><input type="radio" name="folder-color" value="tertiary"> <span class="text-tertiary font-bold">Teal</span></label>
+                    <label><input type="radio" name="folder-color" value="error"> <span class="text-error font-bold">Red</span></label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-md pt-2">
+                <button onclick="toggleFolderModal(false)" class="text-on-surface-variant font-label-md">Cancel</button>
+                <button onclick="submitNewFolder()" class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Note Modal -->
+    <div id="note-modal" class="fixed inset-0 z-[160] bg-black/50 hidden flex items-center justify-center p-md">
+        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl p-lg space-y-md flex flex-col max-h-[80vh]">
+            <h3 id="note-modal-header" class="font-headline-sm text-headline-sm text-primary">Write Note</h3>
+            <div class="space-y-sm flex-1 flex flex-col">
+                <input type="text" id="note-title-input" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 font-bold" placeholder="Note Title">
+                <textarea id="note-content-input" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4 flex-1 resize-none h-48" placeholder="Start typing details..."></textarea>
+            </div>
+            <div class="flex justify-between pt-2">
+                <button id="btn-delete-note" class="text-error font-label-md hover:underline hidden">Delete</button>
+                <div class="flex gap-md ml-auto">
+                    <button onclick="toggleNoteModal(false)" class="text-on-surface-variant font-label-md">Cancel</button>
+                    <button onclick="submitNote()" class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl">Save Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAB -->
+    <button onclick="toggleFolderModal(true)" class="fixed bottom-24 right-6 w-16 h-16 bg-secondary text-on-secondary rounded-full shadow-[0_8px_30px_rgba(0,89,187,0.3)] flex items-center justify-center z-50 active:scale-90 transition-all hover:scale-105">
+        <span class="material-symbols-outlined text-3xl">add</span>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        renderGlobalNavbar('notes');
+
+        let activeFolderId = null;
+        let editingNoteId = null;
+
+        // Render Bento folders
+        function displayFolders() {
+            const folders = NotesManager.getFolders();
+            const grid = document.getElementById('folders-grid');
+            
+            grid.innerHTML = folders.map(f => {
+                let border = 'border-primary';
+                let iconText = 'folder';
+                let textCol = 'text-primary';
+                let bgBadge = 'bg-primary-fixed text-on-primary-fixed';
+
+                if (f.color === 'secondary') {
+                    border = 'border-secondary';
+                    iconText = 'folder_open';
+                    textCol = 'text-secondary';
+                    bgBadge = 'bg-secondary-fixed text-on-secondary-fixed';
+                } else if (f.color === 'tertiary') {
+                    border = 'border-on-tertiary-container';
+                    iconText = 'cloud';
+                    textCol = 'text-on-tertiary-container';
+                    bgBadge = 'bg-tertiary-fixed text-on-tertiary-fixed';
+                } else if (f.color === 'error') {
+                    border = 'border-error';
+                    iconText = 'assignment';
+                    textCol = 'text-error';
+                    bgBadge = 'bg-error-container text-on-error-container';
+                }
+
+                return `
+                    <div onclick="openFolderDetail('${f.id}')" class="bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_20px_rgba(21,21,125,0.04)] border-l-4 ${border} flex flex-col justify-between aspect-square active:scale-95 transition-all cursor-pointer group hover:shadow-lg">
+                        <div class="flex justify-between items-start">
+                            <span class="material-symbols-outlined ${textCol} text-3xl group-hover:scale-110 transition-transform">${iconText}</span>
+                            <span class="${bgBadge} px-2 py-0.5 rounded-lg font-label-sm text-label-sm">${f.notes.length} Notes</span>
+                        </div>
+                        <div>
+                            <h3 class="font-headline-sm text-headline-sm text-primary leading-tight font-bold">${f.name}</h3>
+                            <p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Click to open</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Display Recents
+        function displayRecents() {
+            const folders = NotesManager.getFolders();
+            const list = document.getElementById('recent-notes-list');
+            let allNotes = [];
+            
+            folders.forEach(f => {
+                f.notes.forEach(n => {
+                    allNotes.push({ ...n, folderId: f.id, folderName: f.name });
+                });
+            });
+
+            if (allNotes.length === 0) {
+                list.innerHTML = `<p class="text-on-surface-variant text-center py-4 text-label-md">No recent notes found.</p>`;
+                return;
+            }
+
+            // Slice top 3 for dashboard
+            list.innerHTML = allNotes.slice(0, 3).map(n => `
+                <div onclick="openEditNoteModal('${n.folderId}', '${n.id}')" class="flex items-center gap-md p-md bg-white rounded-xl border border-surface-variant hover:bg-surface transition-colors cursor-pointer group">
+                    <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">description</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-label-md text-primary font-bold">${n.title}</p>
+                        <p class="font-label-sm text-on-surface-variant">${n.folderName} • ${n.updatedTime}</p>
+                    </div>
+                    <span class="material-symbols-outlined text-outline">chevron_right</span>
+                </div>
+            `).join('');
+        }
+
+        // Folder detail toggle
+        function openFolderDetail(folderId) {
+            activeFolderId = folderId;
+            const folders = NotesManager.getFolders();
+            const folder = folders.find(f => f.id === folderId);
+            
+            if (folder) {
+                document.getElementById('folder-detail-title').innerText = folder.name;
+                document.getElementById('btn-add-note').onclick = () => openCreateNoteModal(folderId);
+                renderFolderNotes(folder);
+                document.getElementById('folder-detail-view').classList.remove('hidden');
+            }
+        }
+
+        function closeFolderDetail() {
+            document.getElementById('folder-detail-view').classList.add('hidden');
+            displayFolders();
+            displayRecents();
+        }
+
+        function renderFolderNotes(folder) {
+            const container = document.getElementById('folder-notes-list');
+            if (folder.notes.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-10 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-5xl mb-2">note_add</span>
+                        <p class="font-bold">No notes in this folder</p>
+                        <p class="text-label-sm">Click "New Note" to add one.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = folder.notes.map(n => `
+                <div onclick="openEditNoteModal('${folder.id}', '${n.id}')" class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 hover:shadow-md transition-shadow cursor-pointer space-y-sm">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-headline-sm text-headline-sm text-primary font-bold">${n.title}</h4>
+                        <span class="text-on-surface-variant text-label-sm">${n.updatedTime}</span>
+                    </div>
+                    <p class="text-on-surface-variant text-body-md whitespace-pre-wrap">${n.content.substring(0, 120)}${n.content.length > 120 ? '...' : ''}</p>
+                </div>
+            `).join('');
+        }
+
+        // Modal triggers
+        function toggleFolderModal(show) {
+            document.getElementById('folder-modal').classList.toggle('hidden', !show);
+        }
+
+        function submitNewFolder() {
+            const name = document.getElementById('folder-name-input').value.trim();
+            if (!name) return;
+
+            const colorRadios = document.getElementsByName('folder-color');
+            let color = "primary";
+            for (const r of colorRadios) {
+                if (r.checked) color = r.value;
+            }
+
+            NotesManager.addFolder(name, color);
+            document.getElementById('folder-name-input').value = '';
+            toggleFolderModal(false);
+            displayFolders();
+        }
+
+        // Note editor triggers
+        function toggleNoteModal(show) {
+            document.getElementById('note-modal').classList.toggle('hidden', !show);
+        }
+
+        function openCreateNoteModal(folderId) {
+            activeFolderId = folderId;
+            editingNoteId = null;
+            document.getElementById('note-modal-header').innerText = "Create New Note";
+            document.getElementById('note-title-input').value = "";
+            document.getElementById('note-content-input').value = "";
+            document.getElementById('btn-delete-note').classList.add('hidden');
+            toggleNoteModal(true);
+        }
+
+        function openEditNoteModal(folderId, noteId) {
+            activeFolderId = folderId;
+            editingNoteId = noteId;
+            
+            const folders = NotesManager.getFolders();
+            const folder = folders.find(f => f.id === folderId);
+            const note = folder ? folder.notes.find(n => n.id === noteId) : null;
+            
+            if (note) {
+                document.getElementById('note-modal-header').innerText = "Edit Note";
+                document.getElementById('note-title-input').value = note.title;
+                document.getElementById('note-content-input').value = note.content;
+                
+                const btnDelete = document.getElementById('btn-delete-note');
+                btnDelete.classList.remove('hidden');
+                btnDelete.onclick = deleteActiveNote;
+                
+                toggleNoteModal(true);
+            }
+        }
+
+        function submitNote() {
+            const title = document.getElementById('note-title-input').value.trim();
+            const content = document.getElementById('note-content-input').value.trim();
+            if (!title) return;
+
+            const folders = NotesManager.getFolders();
+            const folder = folders.find(f => f.id === activeFolderId);
+
+            if (editingNoteId) {
+                // Update
+                const note = folder.notes.find(n => n.id === editingNoteId);
+                if (note) {
+                    note.title = title;
+                    note.content = content;
+                    note.updatedTime = "Just now";
+                }
+            } else {
+                // Create
+                folder.notes.unshift({
+                    id: "note_" + Date.now(),
+                    title: title,
+                    content: content,
+                    updatedTime: "Just now"
+                });
+            }
+
+            NotesManager.saveFolders(folders);
+            toggleNoteModal(false);
+            
+            // Re-render
+            const folderDetailView = document.getElementById('folder-detail-view');
+            if (!folderDetailView.classList.contains('hidden')) {
+                renderFolderNotes(folder);
+            } else {
+                displayFolders();
+                displayRecents();
+            }
+        }
+
+        function deleteActiveNote() {
+            if (confirm("Are you sure you want to delete this note?")) {
+                NotesManager.deleteNote(activeFolderId, editingNoteId);
+                toggleNoteModal(false);
+                const folders = NotesManager.getFolders();
+                const folder = folders.find(f => f.id === activeFolderId);
+                renderFolderNotes(folder);
+            }
+        }
+
+        // Search Filter
+        function filterNotes() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const folders = NotesManager.getFolders();
+            const list = document.getElementById('recent-notes-list');
+            const recentSection = document.getElementById('recent-section');
+
+            if (!query) {
+                displayFolders();
+                displayRecents();
+                recentSection.classList.remove('hidden');
+                return;
+            }
+
+            // Search matches
+            let results = [];
+            folders.forEach(f => {
+                f.notes.forEach(n => {
+                    if (n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query)) {
+                        results.push({ ...n, folderId: f.id, folderName: f.name });
+                    }
+                });
+            });
+
+            recentSection.classList.add('hidden'); // Hide default folders and recents
+            const grid = document.getElementById('folders-grid');
+            
+            if (results.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-10 text-on-surface-variant text-label-md">No search matches found.</div>`;
+                return;
+            }
+
+            grid.innerHTML = results.map(n => `
+                <div onclick="openEditNoteModal('${n.folderId}', '${n.id}')" class="bg-white rounded-xl p-md border border-surface-variant/40 hover:shadow-md cursor-pointer col-span-2 space-y-xs">
+                    <h4 class="font-headline-sm text-primary font-bold">${n.title}</h4>
+                    <p class="text-on-surface-variant text-label-sm">${n.folderName} • ${n.updatedTime}</p>
+                    <p class="text-on-surface-variant text-body-md">${n.content.substring(0, 100)}...</p>
+                </div>
+            `).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            displayFolders();
+            displayRecents();
+        });
+    </script>
+</body>
+</html>

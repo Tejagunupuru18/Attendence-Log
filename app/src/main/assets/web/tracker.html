@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <title>TimeFlow - Attendance Tracker</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "tertiary-container": "#00473b",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-fixed-variant": "#004493",
+                        "secondary-fixed": "#d8e2ff",
+                        "background": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "tertiary": "#002f26",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-fixed": "#04006d",
+                        "error": "#ba1a1a",
+                        "surface": "#f8f9fa",
+                        "primary-container": "#2e3192",
+                        "secondary-container": "#0070ea",
+                        "inverse-primary": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1d",
+                        "on-tertiary-fixed-variant": "#005143",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-container": "#9da1ff",
+                        "on-tertiary-container": "#00bfa2",
+                        "secondary-fixed-dim": "#adc7ff",
+                        "outline": "#777683",
+                        "error-container": "#ffdad6",
+                        "secondary": "#0059bb",
+                        "surface-tint": "#4f54b4",
+                        "primary": "#15157d",
+                        "tertiary-fixed-dim": "#2cdebf",
+                        "on-secondary-fixed": "#001a41",
+                        "on-surface-variant": "#464652",
+                        "surface-bright": "#f8f9fa",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-fixed": "#58fbda",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-container": "#fefcff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-tertiary-fixed": "#00201a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "12px",
+                        "xl": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "700" }],
+                        "display-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+    <!-- TopAppBar -->
+    <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-margin-mobile py-sm">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">query_stats</span>
+            <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Attendance</h1>
+        </div>
+    </header>
+
+    <main class="px-margin-mobile pt-sm space-y-lg">
+        <!-- Global Standing Card -->
+        <section class="bg-primary p-lg rounded-xl text-on-primary shadow-lg space-y-sm">
+            <h3 class="font-label-md text-primary-fixed-dim uppercase tracking-wider">Overall Academic Status</h3>
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 id="total-pct" class="font-display-lg text-display-lg font-bold">0%</h2>
+                    <p id="total-desc" class="text-label-sm opacity-80">Classes Attended</p>
+                </div>
+                <div class="text-right">
+                    <span class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full font-label-md">Status: Active</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subjects Grid List -->
+        <section class="space-y-md">
+            <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Attendance by Course</h3>
+            <div id="subjects-list" class="space-y-md">
+                <!-- Dynamically Rendered Courses -->
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        renderGlobalNavbar('tracker');
+
+        function loadTracker() {
+            const attendance = AttendanceManager.getAttendance();
+            const list = document.getElementById('subjects-list');
+
+            let totalAttended = 0;
+            let totalHeld = 0;
+
+            if (attendance.length === 0) {
+                list.innerHTML = `<p class="text-on-surface-variant text-center py-6 text-label-md">No classes logged yet. Add some in Schedule.</p>`;
+                return;
+            }
+
+            list.innerHTML = attendance.map((sub, index) => {
+                const pct = sub.total > 0 ? Math.round((sub.attended / sub.total) * 100) : 100;
+                totalAttended += sub.attended;
+                totalHeld += sub.total;
+
+                // Safe bunk calculation
+                const minPct = sub.required / 100;
+                let statusText = "Safe Bunk";
+                let statusClass = "bg-tertiary-fixed text-on-tertiary-fixed";
+                let bunkCount = 0;
+
+                if (sub.total > 0) {
+                    const currentPct = (sub.attended / sub.total);
+                    if (currentPct >= minPct) {
+                        bunkCount = Math.floor(sub.attended / minPct) - sub.total;
+                        statusText = bunkCount > 0 ? `${bunkCount} Bunks Safe` : "1 Bunk Safe";
+                    } else {
+                        statusText = "Stay in Class";
+                        statusClass = "bg-error-container text-on-error-container font-bold";
+                    }
+                }
+
+                // Progress stroke dash offset calculation
+                // dash-array = "pct, 100"
+                
+                return `
+                    <div class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 flex items-center gap-md hover:shadow-md transition-shadow">
+                        <!-- Progress Circle -->
+                        <div class="relative w-14 h-14 flex-shrink-0">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path class="text-surface-variant stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3.5"></path>
+                                <path class="${pct >= 75 ? 'text-tertiary' : 'text-error'} stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="${pct}, 100" stroke-linecap="round" stroke-width="3.5"></path>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center font-bold text-label-sm text-primary">${pct}%</div>
+                        </div>
+
+                        <!-- Info details -->
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-headline-sm text-headline-sm text-primary font-bold">${sub.subject}</h4>
+                                <span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm ${statusClass}">${statusText}</span>
+                            </div>
+                            <p class="text-on-surface-variant text-label-sm mt-1">Logged: ${sub.attended} / ${sub.total} classes (Min Req: ${sub.required}%)</p>
+                        </div>
+
+                        <!-- Logs quick adjuster -->
+                        <div class="flex flex-col gap-sm pl-2 border-l border-outline-variant/30 text-center">
+                            <button onclick="adjustAttendance(${index}, 'present')" class="text-xl hover:scale-125 transition-transform active:scale-95">👍</button>
+                            <button onclick="adjustAttendance(${index}, 'absent')" class="text-xl hover:scale-125 transition-transform active:scale-95">👎</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const totalPct = totalHeld > 0 ? Math.round((totalAttended / totalHeld) * 100) : 85;
+            document.getElementById('total-pct').innerText = `${totalPct}%`;
+            document.getElementById('total-desc').innerText = `Total Logged Classes: ${totalAttended} / ${totalHeld}`;
+        }
+
+        function adjustAttendance(index, type) {
+            const attendance = AttendanceManager.getAttendance();
+            const subject = attendance[index];
+            if (subject) {
+                subject.total += 1;
+                if (type === 'present') {
+                    subject.attended += 1;
+                }
+                AttendanceManager.saveAttendance(attendance);
+                loadTracker();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadTracker);
+    </script>
+</body>
+</html>

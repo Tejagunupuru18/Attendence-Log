@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <title>TimeFlow - GPA Calculator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "tertiary-container": "#00473b",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-fixed-variant": "#004493",
+                        "secondary-fixed": "#d8e2ff",
+                        "background": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "tertiary": "#002f26",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-fixed": "#04006d",
+                        "error": "#ba1a1a",
+                        "surface": "#f8f9fa",
+                        "primary-container": "#2e3192",
+                        "secondary-container": "#0070ea",
+                        "inverse-primary": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1d",
+                        "on-tertiary-fixed-variant": "#005143",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-container": "#9da1ff",
+                        "on-tertiary-container": "#00bfa2",
+                        "secondary-fixed-dim": "#adc7ff",
+                        "outline": "#777683",
+                        "error-container": "#ffdad6",
+                        "secondary": "#0059bb",
+                        "surface-tint": "#4f54b4",
+                        "primary": "#15157d",
+                        "tertiary-fixed-dim": "#2cdebf",
+                        "on-secondary-fixed": "#001a41",
+                        "on-surface-variant": "#464652",
+                        "surface-bright": "#f8f9fa",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-fixed": "#58fbda",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-container": "#fefcff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-tertiary-fixed": "#00201a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "12px",
+                        "xl": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "700" }],
+                        "display-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+    <!-- TopAppBar -->
+    <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md px-margin-mobile py-sm">
+        <div class="flex justify-between items-center mb-sm">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-2xl">construction</span>
+                <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Academic Tools</h1>
+            </div>
+        </div>
+        <!-- Sub-Navbar -->
+        <div class="flex border-b border-surface-variant gap-lg pb-1 text-label-md">
+            <a href="notes.html" class="text-on-surface-variant hover:text-primary pb-1">Notes</a>
+            <a href="assignments.html" class="text-on-surface-variant hover:text-primary pb-1">Assignments</a>
+            <a href="gpa.html" class="text-primary font-bold border-b-2 border-primary pb-1">GPA Calc</a>
+        </div>
+    </header>
+
+    <main class="px-margin-mobile pt-md space-y-lg">
+        <!-- Dashboard GPA display -->
+        <section class="bg-primary p-lg rounded-xl text-on-primary shadow-md flex justify-between items-center">
+            <div>
+                <h3 class="font-label-md text-primary-fixed-dim uppercase tracking-wider">Estimated CGPA</h3>
+                <h2 id="overall-cgpa" class="font-display-lg text-display-lg font-bold">3.83</h2>
+            </div>
+            <span class="material-symbols-outlined text-5xl opacity-20">calculate</span>
+        </section>
+
+        <!-- Current Semester GPA calculator -->
+        <section class="bg-white rounded-xl p-md shadow-sm border border-surface-variant/40 space-y-md">
+            <h3 class="font-headline-sm text-headline-sm text-primary font-bold">Calculate Current SGPA</h3>
+            
+            <!-- Courses List -->
+            <div id="calculator-list" class="space-y-sm">
+                <!-- Courses rows inserted dynamically -->
+            </div>
+
+            <button onclick="addCourseRow()" class="w-full py-2 bg-surface-container-low rounded-xl text-secondary font-label-md hover:bg-surface-container transition-colors">+ Add Course Row</button>
+            
+            <div class="flex justify-between items-center pt-md border-t border-surface-variant/30">
+                <div>
+                    <p class="text-on-surface-variant text-label-sm">Current Semester SGPA</p>
+                    <p id="sgpa-output" class="font-headline-md text-headline-md text-secondary font-bold">0.00</p>
+                </div>
+                <button onclick="saveSemesterGPA()" class="bg-primary text-on-primary font-label-md px-5 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all">Save to History</button>
+            </div>
+        </section>
+
+        <!-- Semester GPA History -->
+        <section class="space-y-md">
+            <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">GPA History</h3>
+            <div id="gpa-history-list" class="space-y-sm">
+                <!-- GPA history logs -->
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        renderGlobalNavbar('notes');
+
+        // Course rows list data state
+        let courseRowsCount = 0;
+
+        const GRADES = {
+            "A": 4.0,
+            "A-": 3.7,
+            "B+": 3.3,
+            "B": 3.0,
+            "B-": 2.7,
+            "C+": 2.3,
+            "C": 2.0,
+            "C-": 1.7,
+            "D": 1.0,
+            "F": 0.0
+        };
+
+        function addCourseRow(name = "", credits = 3, grade = "A") {
+            courseRowsCount++;
+            const list = document.getElementById('calculator-list');
+            const rowId = `course-row-${courseRowsCount}`;
+            
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "flex gap-sm items-center bg-surface-container-lowest p-sm rounded-lg border border-surface-variant/20";
+            div.innerHTML = `
+                <input type="text" class="flex-grow bg-surface-container-low border-none rounded-lg py-2 px-3 text-label-md outline-none focus:ring-1 focus:ring-primary" placeholder="Course Name" value="${name}" oninput="calculateSGPA()">
+                
+                <select class="w-16 bg-surface-container-low border-none rounded-lg py-2 px-2 text-label-md outline-none focus:ring-1 focus:ring-primary" onchange="calculateSGPA()">
+                    <option value="1" ${credits==1?'selected':''}>1 Cr</option>
+                    <option value="2" ${credits==2?'selected':''}>2 Cr</option>
+                    <option value="3" ${credits==3?'selected':''}>3 Cr</option>
+                    <option value="4" ${credits==4?'selected':''}>4 Cr</option>
+                    <option value="5" ${credits==5?'selected':''}>5 Cr</option>
+                </select>
+
+                <select class="w-20 bg-surface-container-low border-none rounded-lg py-2 px-2 text-label-md outline-none focus:ring-1 focus:ring-primary" onchange="calculateSGPA()">
+                    ${Object.keys(GRADES).map(g => `<option value="${g}" ${g===grade?'selected':''}>Grade ${g}</option>`).join('')}
+                </select>
+
+                <button onclick="removeCourseRow('${rowId}')" class="text-error font-bold text-lg px-2 hover:scale-110 active:scale-90">✕</button>
+            `;
+            list.appendChild(div);
+            calculateSGPA();
+        }
+
+        function removeCourseRow(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.remove();
+                calculateSGPA();
+            }
+        }
+
+        function calculateSGPA() {
+            const list = document.getElementById('calculator-list');
+            const rows = list.children;
+            let totalCredits = 0;
+            let weightedScore = 0;
+
+            for (let row of rows) {
+                const inputs = row.querySelectorAll('input, select');
+                const credits = parseInt(inputs[1].value);
+                const gradeStr = inputs[2].value;
+                const points = GRADES[gradeStr] || 0;
+
+                totalCredits += credits;
+                weightedScore += (credits * points);
+            }
+
+            const sgpa = totalCredits > 0 ? (weightedScore / totalCredits).toFixed(2) : "0.00";
+            document.getElementById('sgpa-output').innerText = sgpa;
+            return parseFloat(sgpa);
+        }
+
+        function saveSemesterGPA() {
+            const sgpa = calculateSGPA();
+            if (sgpa === 0) return;
+
+            const semNum = GPAManager.getGPAHistory().length + 1;
+            GPAManager.addGPAHistory(`Semester ${semNum}`, sgpa);
+            
+            // Clean up rows
+            document.getElementById('calculator-list').innerHTML = "";
+            courseRowsCount = 0;
+            addCourseRow();
+            
+            loadGPAHistory();
+        }
+
+        function loadGPAHistory() {
+            const history = GPAManager.getGPAHistory();
+            const container = document.getElementById('gpa-history-list');
+
+            let totalGPA = 0;
+            history.forEach(h => totalGPA += h.gpa);
+            const cgpa = history.length > 0 ? (totalGPA / history.length).toFixed(2) : "3.80";
+            document.getElementById('overall-cgpa').innerText = cgpa;
+
+            container.innerHTML = history.map((h, index) => `
+                <div class="flex justify-between items-center p-md bg-white rounded-xl shadow-sm border border-surface-variant/40">
+                    <div>
+                        <h4 class="font-headline-sm text-primary font-bold">${h.semester}</h4>
+                        <p class="text-on-surface-variant text-label-sm">Academic Standings Logged</p>
+                    </div>
+                    <span class="bg-primary-container text-primary font-bold text-headline-sm px-3 py-1 rounded-xl">${h.gpa}</span>
+                </div>
+            `).reverse().join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Seed 3 default rows initially
+            addCourseRow("Database Management Systems", 4, "A");
+            addCourseRow("Discrete Mathematics", 3, "B+");
+            addCourseRow("Cloud Computing", 3, "A-");
+            loadGPAHistory();
+        });
+    </script>
+</body>
+</html>

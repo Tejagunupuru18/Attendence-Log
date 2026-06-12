@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <title>TimeFlow - Assignment Tracker</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "tertiary-container": "#00473b",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-fixed-variant": "#004493",
+                        "secondary-fixed": "#d8e2ff",
+                        "background": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "tertiary": "#002f26",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-fixed": "#04006d",
+                        "error": "#ba1a1a",
+                        "surface": "#f8f9fa",
+                        "primary-container": "#2e3192",
+                        "secondary-container": "#0070ea",
+                        "inverse-primary": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1d",
+                        "on-tertiary-fixed-variant": "#005143",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-container": "#9da1ff",
+                        "on-tertiary-container": "#00bfa2",
+                        "secondary-fixed-dim": "#adc7ff",
+                        "outline": "#777683",
+                        "error-container": "#ffdad6",
+                        "secondary": "#0059bb",
+                        "surface-tint": "#4f54b4",
+                        "primary": "#15157d",
+                        "tertiary-fixed-dim": "#2cdebf",
+                        "on-secondary-fixed": "#001a41",
+                        "on-surface-variant": "#464652",
+                        "surface-bright": "#f8f9fa",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-fixed": "#58fbda",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-container": "#fefcff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-tertiary-fixed": "#00201a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "12px",
+                        "xl": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "700" }],
+                        "display-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+    <!-- TopAppBar -->
+    <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md px-margin-mobile py-sm">
+        <div class="flex justify-between items-center mb-sm">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-2xl">construction</span>
+                <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Academic Tools</h1>
+            </div>
+        </div>
+        <!-- Sub-Navbar -->
+        <div class="flex border-b border-surface-variant gap-lg pb-1 text-label-md">
+            <a href="notes.html" class="text-on-surface-variant hover:text-primary pb-1">Notes</a>
+            <a href="assignments.html" class="text-primary font-bold border-b-2 border-primary pb-1">Assignments</a>
+            <a href="gpa.html" class="text-on-surface-variant hover:text-primary pb-1">GPA Calc</a>
+        </div>
+    </header>
+
+    <main class="px-margin-mobile pt-sm space-y-lg">
+        <!-- Dashboard metrics -->
+        <section class="bg-primary p-lg rounded-xl text-on-primary shadow-md flex justify-between items-center">
+            <div>
+                <h3 class="font-label-md text-primary-fixed-dim uppercase tracking-wider">Pending Assignments</h3>
+                <h2 id="pending-count" class="font-display-lg text-display-lg font-bold">0</h2>
+            </div>
+            <span class="material-symbols-outlined text-5xl opacity-20">assignment_turned_in</span>
+        </section>
+
+        <!-- Assignments list -->
+        <section class="space-y-md">
+            <div class="flex justify-between items-center">
+                <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Active Tasks</h3>
+                <button onclick="toggleAssignModal(true)" class="text-secondary font-label-md hover:underline">+ New Task</button>
+            </div>
+            <div id="assignments-list" class="space-y-sm">
+                <!-- Loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- Completed list -->
+        <section class="space-y-md pt-md">
+            <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Completed</h3>
+            <div id="completed-list" class="space-y-sm opacity-60">
+                <!-- Loaded dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Assignment Modal -->
+    <div id="assign-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-center justify-center p-md">
+        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-lg space-y-md">
+            <h3 class="font-headline-sm text-headline-sm text-primary">Create Assignment</h3>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Task / Title</label>
+                <input type="text" id="assign-title" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="e.g. Write Review Draft">
+            </div>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Subject</label>
+                <select id="assign-subject" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4">
+                    <!-- Populated via script based on unique classes -->
+                </select>
+            </div>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Due Date</label>
+                <input type="date" id="assign-date" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4">
+            </div>
+            <div class="flex justify-end gap-md pt-2">
+                <button onclick="toggleAssignModal(false)" class="text-on-surface-variant font-label-md">Cancel</button>
+                <button onclick="submitNewAssignment()" class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-xl">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAB -->
+    <button onclick="toggleAssignModal(true)" class="fixed bottom-24 right-6 w-16 h-16 bg-secondary text-on-secondary rounded-full shadow-lg flex items-center justify-center z-50 active:scale-90 transition-transform">
+        <span class="material-symbols-outlined text-3xl">add</span>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        renderGlobalNavbar('notes');
+
+        function toggleAssignModal(show) {
+            document.getElementById('assign-modal').classList.toggle('hidden', !show);
+            if (show) {
+                // Populate subject options
+                const select = document.getElementById('assign-subject');
+                const classes = TimetableManager.getClasses();
+                const uniqueSubjects = [...new Set(classes.map(c => c.subject))];
+                if (uniqueSubjects.length === 0) {
+                    uniqueSubjects.push("General Study", "Database Mgmt", "Discrete Math", "Cloud Computing");
+                }
+                select.innerHTML = uniqueSubjects.map(s => `<option value="${s}">${s}</option>`).join('');
+                
+                // Set default date to today + 3 days
+                const dateInput = document.getElementById('assign-date');
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 3);
+                dateInput.value = defaultDate.toISOString().substring(0, 10);
+            }
+        }
+
+        function submitNewAssignment() {
+            const title = document.getElementById('assign-title').value.trim();
+            const subject = document.getElementById('assign-subject').value;
+            const date = document.getElementById('assign-date').value;
+
+            if (!title || !date) return;
+
+            AssignmentManager.addAssignment(title, subject, date);
+            document.getElementById('assign-title').value = '';
+            toggleAssignModal(false);
+            loadAssignments();
+        }
+
+        function loadAssignments() {
+            const list = AssignmentManager.getAssignments();
+            const activeList = document.getElementById('assignments-list');
+            const completedList = document.getElementById('completed-list');
+
+            const pending = list.filter(a => !a.completed);
+            const completed = list.filter(a => a.completed);
+
+            document.getElementById('pending-count').innerText = pending.length;
+
+            if (pending.length === 0) {
+                activeList.innerHTML = `<p class="text-on-surface-variant text-center py-4 text-label-md">No pending assignments!</p>`;
+            } else {
+                activeList.innerHTML = pending.map(a => `
+                    <div class="flex items-center gap-md p-md bg-white rounded-xl border border-surface-variant hover:bg-surface transition-colors">
+                        <input type="checkbox" onclick="toggleTask('${a.id}')" class="rounded border-outline-variant text-primary focus:ring-primary w-5 h-5 cursor-pointer">
+                        <div class="flex-grow ml-1">
+                            <h4 class="font-headline-sm text-headline-sm text-primary font-bold leading-tight">${a.title}</h4>
+                            <p class="text-on-surface-variant text-label-sm mt-0.5">${a.subject} • Due: ${formatDate(a.dueDate)}</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">Due Soon</span>
+                    </div>
+                `).join('');
+            }
+
+            if (completed.length === 0) {
+                completedList.innerHTML = `<p class="text-on-surface-variant text-center py-2 text-label-sm">No completed assignments.</p>`;
+            } else {
+                completedList.innerHTML = completed.map(a => `
+                    <div class="flex items-center gap-md p-md bg-surface-container-low rounded-xl border border-surface-variant/30">
+                        <input type="checkbox" checked onclick="toggleTask('${a.id}')" class="rounded border-outline-variant text-primary focus:ring-primary w-5 h-5 cursor-pointer">
+                        <div class="flex-grow ml-1 line-through text-on-surface-variant">
+                            <h4 class="font-label-md font-bold leading-tight">${a.title}</h4>
+                            <p class="text-label-sm">${a.subject}</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded-lg font-label-sm text-label-sm">Done</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleTask(id) {
+            AssignmentManager.toggleAssignment(id);
+            loadAssignments();
+        }
+
+        function formatDate(dateStr) {
+            try {
+                const options = { month: 'short', day: 'numeric' };
+                return new Date(dateStr).toLocaleDateString('en-US', options);
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadAssignments);
+    </script>
+</body>
+</html>

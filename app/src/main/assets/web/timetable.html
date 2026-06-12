@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>TimeFlow - Timetable</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "tertiary-container": "#00473b",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-fixed-variant": "#004493",
+                        "secondary-fixed": "#d8e2ff",
+                        "background": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "tertiary": "#002f26",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-fixed": "#04006d",
+                        "error": "#ba1a1a",
+                        "surface": "#f8f9fa",
+                        "primary-container": "#2e3192",
+                        "secondary-container": "#0070ea",
+                        "inverse-primary": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1d",
+                        "on-tertiary-fixed-variant": "#005143",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-container": "#9da1ff",
+                        "on-tertiary-container": "#00bfa2",
+                        "secondary-fixed-dim": "#adc7ff",
+                        "outline": "#777683",
+                        "error-container": "#ffdad6",
+                        "secondary": "#0059bb",
+                        "surface-tint": "#4f54b4",
+                        "primary": "#15157d",
+                        "tertiary-fixed-dim": "#2cdebf",
+                        "on-secondary-fixed": "#001a41",
+                        "on-surface-variant": "#464652",
+                        "surface-bright": "#f8f9fa",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-fixed": "#58fbda",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-container": "#fefcff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-tertiary-fixed": "#00201a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "gutter": "12px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "800"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "display-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .timeline-grid {
+            background-image: linear-gradient(to bottom, transparent 0%, transparent calc(100% - 1px), #e1e3e4 calc(100% - 1px));
+            background-size: 100% 90px;
+        }
+
+        .subject-card {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .subject-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased pb-24">
+    <!-- Top App Bar -->
+    <header class="w-full top-0 sticky z-40 bg-background flex justify-between items-center px-margin-mobile py-sm">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">calendar_today</span>
+            <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Schedule</h1>
+        </div>
+        <div class="flex items-center gap-sm">
+            <button onclick="toggleAddModal(true)" class="bg-primary text-on-primary text-label-md px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-[18px]">add</span> Add Class
+            </button>
+        </div>
+    </header>
+
+    <!-- Day Selector -->
+    <nav class="sticky top-[60px] z-30 bg-background/90 backdrop-blur-md py-sm border-b border-surface-variant/30">
+        <div class="flex overflow-x-auto hide-scrollbar px-margin-mobile gap-sm" id="day-bar">
+            <!-- Populated via script -->
+        </div>
+    </nav>
+
+    <!-- Main Content: Vertical Timetable -->
+    <main class="px-margin-mobile pt-lg pb-10">
+        <div class="relative flex gap-gutter">
+            <!-- Time Column -->
+            <div class="flex flex-col justify-between py-2 text-right w-12 text-outline text-label-sm space-y-[62px]">
+                <span>08:00 AM</span>
+                <span>09:00 AM</span>
+                <span>10:00 AM</span>
+                <span>11:00 AM</span>
+                <span>12:00 PM</span>
+                <span>01:00 PM</span>
+                <span>02:00 PM</span>
+                <span>03:00 PM</span>
+                <span>04:00 PM</span>
+            </div>
+            <!-- Vertical Timeline and Cards -->
+            <div class="flex-1 relative timeline-grid min-h-[700px] border-l border-surface-variant/50" id="class-container">
+                <!-- Dynamically Rendered Cards -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Class Modal -->
+    <div id="add-modal" class="fixed inset-0 z-[150] bg-black/50 hidden flex items-center justify-center p-md">
+        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <div class="bg-primary p-lg text-white flex justify-between items-center">
+                <h3 class="font-headline-sm text-headline-sm">Add New Class</h3>
+                <button onclick="toggleAddModal(false)" class="material-symbols-outlined text-white hover:opacity-80">close</button>
+            </div>
+            <form id="add-class-form" class="p-lg space-y-md">
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Subject Name</label>
+                    <input type="text" id="class-subject" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="e.g. Database Mgmt">
+                </div>
+                <div class="grid grid-cols-2 gap-md">
+                    <div>
+                        <label class="block font-label-md text-on-surface-variant mb-1">Instructor</label>
+                        <input type="text" id="class-instructor" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="Dr. Jenkins">
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-on-surface-variant mb-1">Room / Location</label>
+                        <input type="text" id="class-room" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-4" placeholder="Lab 402">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-sm">
+                    <div>
+                        <label class="block font-label-md text-on-surface-variant mb-1">Day</label>
+                        <select id="class-day" class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-2">
+                            <option value="Mon">Mon</option>
+                            <option value="Tue">Tue</option>
+                            <option value="Wed">Wed</option>
+                            <option value="Thu">Thu</option>
+                            <option value="Fri">Fri</option>
+                            <option value="Sat">Sat</option>
+                            <option value="Sun">Sun</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-on-surface-variant mb-1">Start Time</label>
+                        <input type="text" id="class-start" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-2" placeholder="09:00 AM">
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-on-surface-variant mb-1">End Time</label>
+                        <input type="text" id="class-end" required class="w-full bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary outline-none py-3 px-2" placeholder="10:45 AM">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-label-md text-on-surface-variant mb-1">Theme Color</label>
+                    <div class="flex gap-md pt-1">
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="class-color" value="primary" checked class="text-primary focus:ring-primary">
+                            <span class="text-primary font-bold">Indigo</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="class-color" value="secondary" class="text-secondary focus:ring-secondary">
+                            <span class="text-secondary font-bold">Blue</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="class-color" value="tertiary" class="text-tertiary focus:ring-tertiary">
+                            <span class="text-tertiary font-bold">Teal</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="pt-2 flex justify-end gap-md">
+                    <button type="button" onclick="toggleAddModal(false)" class="text-on-surface-variant font-label-md px-4 py-2 hover:bg-surface-container-low rounded-xl">Cancel</button>
+                    <button type="submit" class="bg-primary text-on-primary font-label-md px-6 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all">Save Class</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button onclick="toggleAddModal(true)" class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center active:scale-90 transition-all duration-200 z-50">
+        <span class="material-symbols-outlined text-[32px]">add</span>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        renderGlobalNavbar('timetable');
+
+        // Current Active Day State
+        const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        let activeDay = daysOfWeek[new Date().getDay() - 1] || "Mon";
+        if (new Date().getDay() === 0) activeDay = "Sun"; // handle Sunday index
+
+        // Render Day Selector Bar
+        function renderDayBar() {
+            const container = document.getElementById('day-bar');
+            container.innerHTML = daysOfWeek.map(d => {
+                const isActive = d === activeDay;
+                return `
+                    <button onclick="selectDay('${d}')" class="flex flex-col items-center min-w-[56px] py-sm px-2 rounded-xl ${isActive ? 'bg-primary text-on-primary shadow-md' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'} transition-colors">
+                        <span class="font-label-sm text-label-sm opacity-80 uppercase">${d}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectDay(day) {
+            activeDay = day;
+            renderDayBar();
+            renderTimetable();
+        }
+
+        // Convert Time String (e.g. "09:00 AM") to grid top offset
+        // Day starts at 08:00 AM. 90px grid line height corresponds to 1 hour (60 mins).
+        // 1 min = 1.5px offset.
+        function calculateGridOffset(timeStr) {
+            try {
+                const parts = timeStr.trim().split(' ');
+                const timeParts = parts[0].split(':');
+                let hrs = parseInt(timeParts[0]);
+                const mins = parseInt(timeParts[1]);
+                const isPm = parts[1].toLowerCase() === 'pm';
+
+                if (isPm && hrs !== 12) hrs += 12;
+                if (!isPm && hrs === 12) hrs = 0;
+
+                const startOffsetMins = 8 * 60; // 08:00 AM
+                const classOffsetMins = (hrs * 60) + mins;
+                
+                const diffMins = classOffsetMins - startOffsetMins;
+                return Math.max(0, diffMins * 1.5);
+            } catch (e) {
+                return 50; // default top
+            }
+        }
+
+        function calculateHeight(startTime, endTime) {
+            try {
+                const startMins = convertToMinutes(startTime);
+                const endMins = convertToMinutes(endTime);
+                const diff = endMins - startMins;
+                return Math.max(80, diff * 1.5);
+            } catch (e) {
+                return 100; // default height
+            }
+        }
+
+        function convertToMinutes(timeStr) {
+            const parts = timeStr.trim().split(' ');
+            const timeParts = parts[0].split(':');
+            let hrs = parseInt(timeParts[0]);
+            const mins = parseInt(timeParts[1]);
+            const isPm = parts[1].toLowerCase() === 'pm';
+
+            if (isPm && hrs !== 12) hrs += 12;
+            if (!isPm && hrs === 12) hrs = 0;
+            return (hrs * 60) + mins;
+        }
+
+        // Render Timetable Cards for Active Day
+        function renderTimetable() {
+            const classes = TimetableManager.getClasses();
+            const dayClasses = classes.filter(c => c.day === activeDay);
+            const container = document.getElementById('class-container');
+
+            if (dayClasses.length === 0) {
+                container.innerHTML = `
+                    <div class="absolute inset-0 flex flex-col items-center justify-center opacity-40">
+                        <span class="material-symbols-outlined text-[64px] mb-2">hotel</span>
+                        <p class="font-headline-sm">No classes today!</p>
+                        <p class="font-label-md">Enjoy your day off or add a new course.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = dayClasses.map(c => {
+                const top = calculateGridOffset(c.startTime);
+                const height = calculateHeight(c.startTime, c.endTime);
+                const borderCol = c.color === 'secondary' ? 'border-secondary' : c.color === 'tertiary' ? 'border-tertiary' : 'border-primary';
+                const textCol = c.color === 'secondary' ? 'text-secondary' : c.color === 'tertiary' ? 'text-tertiary' : 'text-primary';
+
+                return `
+                    <div class="absolute left-0 right-0 subject-card" style="top: ${top}px; height: ${height}px;">
+                        <div class="mx-xs h-full bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(21,21,125,0.04)] border-l-4 ${borderCol} flex flex-col p-md relative overflow-hidden">
+                            <div class="flex justify-between items-start mb-1">
+                                <h2 class="font-headline-sm text-headline-sm ${textCol} font-bold">${c.subject}</h2>
+                                <span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded-full font-label-sm text-label-sm">Safe Bunk</span>
+                            </div>
+                            <div class="flex items-center gap-xs text-on-surface-variant mb-1">
+                                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                <span class="font-label-md text-label-md">${c.startTime} - ${c.endTime}</span>
+                            </div>
+                            <div class="mt-auto flex justify-between items-center text-label-sm">
+                                <div class="flex flex-col">
+                                    <span class="text-outline uppercase tracking-wider">Faculty</span>
+                                    <span class="text-on-surface font-semibold">${c.instructor}</span>
+                                </div>
+                                <div class="flex flex-col text-right">
+                                    <span class="text-outline uppercase tracking-wider">Room</span>
+                                    <span class="text-on-surface font-semibold">${c.room}</span>
+                                </div>
+                                <div class="flex items-center gap-md ml-4 border-l border-outline-variant/30 pl-4">
+                                    <button onclick="logAttendance('${c.subject}', 'present')" class="hover:scale-125 transition-transform active:scale-90 text-lg" title="Log Present">✅</button>
+                                    <button onclick="logAttendance('${c.subject}', 'absent')" class="hover:scale-125 transition-transform active:scale-90 text-lg" title="Log Absent">❌</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Modal Controls
+        function toggleAddModal(show) {
+            const modal = document.getElementById('add-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Form Submit
+        document.getElementById('add-class-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const subject = document.getElementById('class-subject').value;
+            const instructor = document.getElementById('class-instructor').value;
+            const room = document.getElementById('class-room').value;
+            const day = document.getElementById('class-day').value;
+            const startTime = document.getElementById('class-start').value;
+            const endTime = document.getElementById('class-end').value;
+            
+            const colorRadios = document.getElementsByName('class-color');
+            let color = "primary";
+            for (const radio of colorRadios) {
+                if (radio.checked) {
+                    color = radio.value;
+                    break;
+                }
+            }
+
+            TimetableManager.addClass({
+                subject, instructor, room, day, startTime, endTime, color
+            });
+
+            toggleAddModal(false);
+            this.reset();
+            renderTimetable();
+        });
+
+        // Attendance Quick Log
+        function logAttendance(subject, status) {
+            const record = AttendanceManager.logAttendance(subject, status === 'present' ? 'present' : 'absent');
+            if (record) {
+                alert(`Logged attendance for ${subject}! Total: ${record.attended}/${record.total} classes (${Math.round((record.attended/record.total)*100)}%)`);
+            }
+        }
+
+        // Load initially
+        window.addEventListener('DOMContentLoaded', () => {
+            renderDayBar();
+            renderTimetable();
+        });
+    </script>
+</body>
+</html>

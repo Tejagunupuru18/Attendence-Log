@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>TimeFlow Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#edeeef",
+                    "tertiary-container": "#00473b",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c7c5d4",
+                    "on-secondary-fixed-variant": "#004493",
+                    "secondary-fixed": "#d8e2ff",
+                    "background": "#f8f9fa",
+                    "surface-variant": "#e1e3e4",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#191c1d",
+                    "tertiary": "#002f26",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#373a9b",
+                    "on-primary-fixed": "#04006d",
+                    "error": "#ba1a1a",
+                    "surface": "#f8f9fa",
+                    "primary-container": "#2e3192",
+                    "secondary-container": "#0070ea",
+                    "inverse-primary": "#c0c1ff",
+                    "on-error-container": "#93000a",
+                    "on-background": "#191c1d",
+                    "on-tertiary-fixed-variant": "#005143",
+                    "surface-container-highest": "#e1e3e4",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-primary-container": "#9da1ff",
+                    "on-tertiary-container": "#00bfa2",
+                    "secondary-fixed-dim": "#adc7ff",
+                    "outline": "#777683",
+                    "error-container": "#ffdad6",
+                    "secondary": "#0059bb",
+                    "surface-tint": "#4f54b4",
+                    "primary": "#15157d",
+                    "tertiary-fixed-dim": "#2cdebf",
+                    "on-secondary-fixed": "#001a41",
+                    "on-surface-variant": "#464652",
+                    "surface-bright": "#f8f9fa",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-dim": "#d9dadb",
+                    "tertiary-fixed": "#58fbda",
+                    "inverse-surface": "#2e3132",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-container-high": "#e7e8e9",
+                    "on-secondary-container": "#fefcff",
+                    "primary-fixed": "#e1e0ff",
+                    "on-tertiary-fixed": "#00201a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "xl": "32px",
+                    "gutter": "12px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "label-md": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "display-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "display-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "800"}],
+                    "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                    "display-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(21, 21, 125, 0.2); }
+            70% { box-shadow: 0 0 0 10px rgba(21, 21, 125, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(21, 21, 125, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+    <!-- TopAppBar -->
+    <header class="w-full top-0 sticky z-40 bg-background/90 backdrop-blur-md flex justify-between items-center px-margin-mobile py-sm">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">school</span>
+            <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">TimeFlow</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="font-label-md text-on-surface-variant">User Account</span>
+            <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold">A</div>
+        </div>
+    </header>
+
+    <main class="px-margin-mobile pt-sm space-y-lg">
+        <!-- Welcome Message -->
+        <section class="space-y-xs">
+            <p class="font-body-md text-on-surface-variant">Welcome back,</p>
+            <h2 class="font-headline-md text-headline-md text-primary">Alex Chen</h2>
+        </section>
+
+        <!-- Current Status: Today's Schedule -->
+        <section id="next-class-card" class="relative overflow-hidden rounded-xl bg-primary shadow-lg p-lg text-on-primary">
+            <!-- Loading placeholder state -->
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <span class="material-symbols-outlined text-[120px]">schedule</span>
+            </div>
+            <div class="relative z-10 space-y-md">
+                <div class="flex justify-between items-start">
+                    <span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-sm text-label-sm">Next Class</span>
+                    <div id="countdown-badge" class="flex items-center gap-1 text-primary-fixed-dim active-pulse px-2 py-1 rounded-lg">
+                        <span class="w-2 h-2 rounded-full bg-primary-fixed-dim"></span>
+                        <span class="font-label-md text-label-md">Today's Schedule</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 id="next-class-name" class="font-headline-md text-headline-md">Loading schedule...</h3>
+                    <p id="next-class-details" class="font-body-md opacity-90"></p>
+                </div>
+                <div class="flex items-center gap-4 pt-2">
+                    <a href="timetable.html" class="bg-primary-fixed text-primary font-label-md px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                        View Full Timetable
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Attendance Summary -->
+        <section class="space-y-sm">
+            <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Academic Standing</h3>
+            <div class="grid grid-cols-2 gap-gutter">
+                <!-- Attendance Card -->
+                <div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(21,21,125,0.04)] flex flex-col items-center text-center space-y-sm">
+                    <div class="relative w-16 h-16">
+                        <svg class="w-full h-full" viewBox="0 0 36 36">
+                            <path class="text-surface-variant stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+                            <path id="attendance-ring" class="text-tertiary stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="0, 100" stroke-linecap="round" stroke-width="3"></path>
+                        </svg>
+                        <div id="attendance-pct" class="absolute inset-0 flex items-center justify-center font-label-md text-primary">0%</div>
+                    </div>
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface">Attendance</p>
+                        <p id="attendance-status" class="font-label-sm text-label-sm text-on-tertiary-container">Calculating...</p>
+                    </div>
+                </div>
+                <!-- Bunk Card -->
+                <div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(21,21,125,0.04)] flex flex-col items-center text-center justify-center space-y-xs">
+                    <div id="bunk-count" class="bg-tertiary-fixed/20 text-tertiary px-3 py-1 rounded-full font-headline-md">0</div>
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface">Safe Bunks</p>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant">Available</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Focus Mode Entry -->
+        <section>
+            <div class="bg-secondary-container rounded-2xl p-lg relative overflow-hidden group">
+                <div class="absolute -right-8 -bottom-8 opacity-20 group-hover:scale-110 transition-transform duration-500">
+                    <span class="material-symbols-outlined text-[140px] text-on-secondary-container">bolt</span>
+                </div>
+                <div class="relative z-10 flex flex-col gap-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                        <span id="focus-streak" class="font-label-md text-on-secondary-container">0 Day Focus Streak</span>
+                    </div>
+                    <h3 class="font-display-lg-mobile text-display-lg-mobile text-on-secondary-container">Ready to deep work?</h3>
+                    <button id="btn-focus" class="bg-on-secondary-container text-secondary-container font-headline-sm py-3 px-6 rounded-xl self-start mt-2 shadow-lg active:scale-95 transition-transform">
+                        Start Study Focus
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Classes -->
+        <section class="space-y-md">
+            <div class="flex justify-between items-center">
+                <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Upcoming Today</h3>
+                <a href="timetable.html" class="text-primary font-label-md hover:underline">View All</a>
+            </div>
+            <div id="upcoming-list" class="space-y-sm">
+                <!-- Dynamically loaded -->
+                <p class="text-center py-4 text-on-surface-variant text-body-md">No classes remaining today.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- JS Scripts -->
+    <script src="app.js"></script>
+    <script>
+        // Set Active Nav Tab
+        renderGlobalNavbar('home');
+
+        // Initialize Streaks
+        let streak = parseInt(localStorage.getItem('tf_focus_streak') || '0');
+        if (streak === 0) {
+            streak = 4; // Seed with default
+            localStorage.setItem('tf_focus_streak', '4');
+        }
+        document.getElementById('focus-streak').innerText = `${streak} Day Focus Streak`;
+
+        // Focus Button Logic
+        const btnFocus = document.getElementById('btn-focus');
+        let timer = null;
+        let elapsed = 0;
+        btnFocus.addEventListener('click', function() {
+            if (timer) {
+                // Stop timer
+                clearInterval(timer);
+                timer = null;
+                btnFocus.innerHTML = "Start Study Focus";
+                btnFocus.className = "bg-on-secondary-container text-secondary-container font-headline-sm py-3 px-6 rounded-xl self-start mt-2 shadow-lg active:scale-95 transition-transform";
+                // Increment Streak on session end
+                streak++;
+                localStorage.setItem('tf_focus_streak', streak.toString());
+                document.getElementById('focus-streak').innerText = `${streak} Day Focus Streak`;
+            } else {
+                btnFocus.innerHTML = "Session Starting...";
+                setTimeout(() => {
+                    elapsed = 0;
+                    btnFocus.innerHTML = "Focusing (00:00)";
+                    btnFocus.className = "bg-tertiary-container text-on-tertiary font-headline-sm py-3 px-6 rounded-xl self-start mt-2 shadow-lg active:scale-95 transition-transform";
+                    
+                    timer = setInterval(() => {
+                        elapsed++;
+                        const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                        const secs = (elapsed % 60).toString().padStart(2, '0');
+                        btnFocus.innerHTML = `Focusing (${mins}:${secs}) - Stop`;
+                    }, 1000);
+                }, 800);
+            }
+        });
+
+        // Load Dynamic Data
+        function loadDashboard() {
+            // Calculate standing
+            const attendance = AttendanceManager.getAttendance();
+            let totalAttended = 0;
+            let totalClasses = 0;
+            let bunkableCount = 0;
+
+            attendance.forEach(subject => {
+                totalAttended += subject.attended;
+                totalClasses += subject.total;
+                
+                // Estimate safe bunks
+                // Formula: to maintain required %, we find how many we can miss.
+                // attended / (total + bunks) >= required%
+                // attended >= required% * (total + bunks) => bunks <= (attended / required%) - total
+                const pct = subject.required / 100;
+                if (subject.total > 0) {
+                    const currentPct = (subject.attended / subject.total);
+                    if (currentPct >= pct) {
+                        const maxBunks = Math.floor(subject.attended / pct) - subject.total;
+                        if (maxBunks > 0) {
+                            bunkableCount += maxBunks;
+                        }
+                    }
+                } else {
+                    // Default safe bunk if no classes held yet
+                    bunkableCount += 1;
+                }
+            });
+
+            const avgPct = totalClasses > 0 ? Math.round((totalAttended / totalClasses) * 100) : 85;
+            document.getElementById('attendance-pct').innerText = `${avgPct}%`;
+            
+            // Progress ring circumference is 2 * pi * r = 2 * 3.14159 * 15.9155 = 100
+            document.getElementById('attendance-ring').setAttribute('stroke-dasharray', `${avgPct}, 100`);
+            
+            const attendanceStatus = document.getElementById('attendance-status');
+            if (avgPct >= 75) {
+                attendanceStatus.innerText = "Safe Margin";
+                attendanceStatus.className = "font-label-sm text-label-sm text-on-tertiary-container";
+            } else {
+                attendanceStatus.innerText = "Low Attendance!";
+                attendanceStatus.className = "font-label-sm text-label-sm text-error font-bold";
+            }
+
+            document.getElementById('bunk-count').innerText = bunkableCount;
+
+            // Get Current Schedule for Today
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const todayDay = days[new Date().getDay()];
+            const timetable = TimetableManager.getClasses();
+            
+            // Filter classes for today
+            const todayClasses = timetable.filter(c => c.day === todayDay || (todayDay === "Sun" && c.day === "Mon")); // Seed/fall back to Mon if weekend
+            
+            const upcomingList = document.getElementById('upcoming-list');
+            const nextClassCardName = document.getElementById('next-class-name');
+            const nextClassDetails = document.getElementById('next-class-details');
+            const countdownBadge = document.getElementById('countdown-badge');
+
+            if (todayClasses.length > 0) {
+                // Sort classes by time
+                todayClasses.sort((a,b) => a.startTime.localeCompare(b.startTime));
+
+                // Find next class (for simulation, pick first one)
+                const nextCls = todayClasses[0];
+                nextClassCardName.innerText = nextCls.subject;
+                nextClassDetails.innerText = `${nextCls.room} • ${nextCls.instructor}`;
+                countdownBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-primary-fixed-dim"></span><span class="font-label-md text-label-md">Starts in 8 mins</span>`;
+
+                // Render list
+                upcomingList.innerHTML = todayClasses.map(c => `
+                    <div class="bg-white rounded-xl p-md flex items-center gap-md shadow-[0_4px_20px_rgba(21,21,125,0.04)] border-l-4 ${c.color === 'secondary' ? 'border-secondary' : c.color === 'tertiary' ? 'border-tertiary' : 'border-primary'}">
+                        <div class="flex flex-col items-center min-w-[60px]">
+                            <span class="font-label-md text-primary font-semibold">${c.startTime.split(' ')[0]}</span>
+                            <span class="font-label-sm text-on-surface-variant">${c.startTime.split(' ')[1]}</span>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">${c.subject}</h4>
+                            <p class="font-body-md text-on-surface-variant">${c.room} • ${c.instructor}</p>
+                        </div>
+                        <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                    </div>
+                `).join('');
+            } else {
+                nextClassCardName.innerText = "No classes remaining today";
+                nextClassDetails.innerText = "Enjoy your free time!";
+                countdownBadge.innerHTML = `<span class="font-label-md text-label-md">Off-Duty</span>`;
+                upcomingList.innerHTML = `<p class="text-center py-6 text-on-surface-variant text-body-md">No classes scheduled today.</p>`;
+            }
+        }
+
+        // Load on load
+        window.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>
