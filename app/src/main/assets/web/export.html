@@ -3,10 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
-    <title>TimeFlow - Export</title>
+    <title>TimeFlow - Export PDF</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable plugin for clean tables -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode:"class",
@@ -14,13 +18,14 @@
                 colors:{
                     "surface-container":"#edeeef","background":"#f8f9fa","surface-variant":"#e1e3e4",
                     "on-primary":"#ffffff","surface-container-lowest":"#ffffff","on-surface":"#191c1d",
-                    "tertiary":"#002f26","on-secondary":"#ffffff","error":"#ba1a1a",
-                    "primary-container":"#2e3192","secondary-container":"#0070ea",
-                    "on-background":"#191c1d","outline-variant":"#c7c5d4","outline":"#777683",
-                    "error-container":"#ffdad6","on-error-container":"#93000a","secondary":"#0059bb",
-                    "primary":"#15157d","on-surface-variant":"#464652","surface-container-low":"#f3f4f5",
-                    "tertiary-fixed":"#58fbda","on-tertiary-fixed":"#00201a","on-tertiary-container":"#00bfa2",
-                    "primary-fixed":"#e1e0ff","on-primary-fixed":"#04006d","on-error":"#ffffff",
+                    "tertiary":"#002f26","on-secondary":"#ffffff","error":"#ba1a1a","surface":"#f8f9fa",
+                    "primary-container":"#2e3192","secondary-container":"#0070ea","on-background":"#191c1d",
+                    "outline-variant":"#c7c5d4","outline":"#777683","error-container":"#ffdad6",
+                    "on-error-container":"#93000a","secondary":"#0059bb","primary":"#15157d",
+                    "on-surface-variant":"#464652","surface-container-low":"#f3f4f5",
+                    "tertiary-fixed":"#58fbda","on-tertiary-fixed":"#00201a",
+                    "on-tertiary-container":"#00bfa2","primary-fixed":"#e1e0ff",
+                    "on-primary-fixed":"#04006d","on-error":"#ffffff",
                     "surface-container-high":"#e7e8e9","on-secondary-container":"#fefcff",
                     "secondary-fixed":"#d8e2ff","on-secondary-fixed":"#001a41",
                     "primary-fixed-dim":"#c0c1ff","on-primary-container":"#9da1ff",
@@ -45,37 +50,33 @@
     </script>
     <style>
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
-
-        /* Print styles — only the preview content prints */
-        @media print {
-            body * { visibility: hidden; }
-            #print-preview, #print-preview * { visibility: visible; }
-            #print-preview {
-                position: fixed; top: 0; left: 0; width: 100%;
-                font-family: 'Hanken Grotesk', sans-serif;
-                padding: 24px;
-            }
-            .no-print { display: none !important; }
-        }
         .export-card { transition: transform 0.15s, box-shadow 0.15s; }
         .export-card:active { transform: scale(0.97); }
+        #toast {
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
 
     <!-- Header -->
-    <header class="w-full top-0 sticky z-40 bg-background/90 backdrop-blur-md flex items-center gap-sm px-margin-mobile py-sm border-b border-surface-variant/30 no-print">
+    <header class="w-full top-0 sticky z-40 bg-background/90 backdrop-blur-md flex items-center gap-sm px-margin-mobile py-sm border-b border-surface-variant/30">
         <a href="dashboard.html" class="material-symbols-outlined text-on-surface-variant">arrow_back</a>
         <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">download</span>
-            <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Export</h1>
+            <span class="material-symbols-outlined text-primary">picture_as_pdf</span>
+            <h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Export PDF</h1>
         </div>
     </header>
 
-    <main class="px-margin-mobile pt-md space-y-md pb-4 no-print">
-        <p class="font-label-md text-on-surface-variant">Choose what to export. Each report opens a print-ready view.</p>
+    <main class="px-margin-mobile pt-md space-y-md pb-4">
+        <p class="font-label-md text-on-surface-variant">Tap any option to generate and download a PDF file.</p>
 
-        <!-- Export cards -->
         <div class="space-y-sm">
 
             <!-- Timetable -->
@@ -85,21 +86,21 @@
                 </div>
                 <div class="flex-1">
                     <p class="font-headline-sm text-on-surface font-bold">Weekly Timetable</p>
-                    <p class="font-label-sm text-on-surface-variant">All subjects · day · time</p>
+                    <p class="font-label-sm text-on-surface-variant">All subjects · day · time slot</p>
                 </div>
-                <span class="material-symbols-outlined text-outline">print</span>
+                <span class="material-symbols-outlined text-primary">download</span>
             </button>
 
-            <!-- Attendance Report -->
+            <!-- Attendance -->
             <button onclick="exportAttendance()" class="export-card w-full bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm p-md flex items-center gap-md text-left">
                 <div class="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
                     <span class="material-symbols-outlined text-on-secondary text-2xl">query_stats</span>
                 </div>
                 <div class="flex-1">
                     <p class="font-headline-sm text-on-surface font-bold">Attendance Report</p>
-                    <p class="font-label-sm text-on-surface-variant">Per subject · % · status</p>
+                    <p class="font-label-sm text-on-surface-variant">Per subject · % · safe bunk count</p>
                 </div>
-                <span class="material-symbols-outlined text-outline">print</span>
+                <span class="material-symbols-outlined text-secondary">download</span>
             </button>
 
             <!-- Notes -->
@@ -109,9 +110,9 @@
                 </div>
                 <div class="flex-1">
                     <p class="font-headline-sm text-on-surface font-bold">Notes</p>
-                    <p class="font-label-sm text-on-surface-variant">All folders · all notes</p>
+                    <p class="font-label-sm text-on-surface-variant">All folders and note content</p>
                 </div>
-                <span class="material-symbols-outlined text-outline">print</span>
+                <span class="material-symbols-outlined text-tertiary">download</span>
             </button>
 
             <!-- Full Report -->
@@ -121,197 +122,317 @@
                 </div>
                 <div class="flex-1">
                     <p class="font-headline-sm text-on-primary font-bold">Full Academic Report</p>
-                    <p class="font-label-sm text-primary-fixed-dim">Everything in one print</p>
+                    <p class="font-label-sm text-primary-fixed-dim">Timetable + Attendance + Notes</p>
                 </div>
-                <span class="material-symbols-outlined text-on-primary">print</span>
+                <span class="material-symbols-outlined text-on-primary">download</span>
             </button>
         </div>
     </main>
 
-    <!-- Print preview area (hidden on screen, shown when printing) -->
-    <div id="print-preview" class="hidden"></div>
+    <!-- Toast notification -->
+    <div id="toast" class="fixed bottom-28 left-1/2 -translate-x-1/2 bg-on-surface text-surface font-label-md px-5 py-3 rounded-2xl shadow-xl z-50 whitespace-nowrap pointer-events-none">
+        PDF saved!
+    </div>
 
     <script src="app.js"></script>
     <script>
         renderGlobalNavbar('home');
 
+        const { jsPDF } = window.jspdf;
         const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-        function printHTML(html) {
-            const prev = document.getElementById('print-preview');
-            prev.innerHTML = html;
-            prev.classList.remove('hidden');
-            setTimeout(() => {
-                window.print();
-                prev.classList.add('hidden');
-                prev.innerHTML = '';
-            }, 300);
+        // ── Toast ─────────────────────────────────────────────────────
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
         }
 
-        function headerBlock(title) {
-            const now = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-            return `
-            <div style="border-bottom:2px solid #15157d;padding-bottom:12px;margin-bottom:20px;">
-                <h1 style="font-size:24px;font-weight:800;color:#15157d;margin:0">TimeFlow — ${title}</h1>
-                <p style="font-size:12px;color:#777683;margin:4px 0 0">Generated on ${now}</p>
-            </div>`;
+        // ── PDF helpers ───────────────────────────────────────────────
+        function newDoc(title) {
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+            // Header band
+            doc.setFillColor(21, 21, 125);
+            doc.rect(0, 0, 210, 22, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('TimeFlow — ' + title, 14, 14);
+
+            // Date subtitle
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Generated: ' + now, 14, 20);
+
+            doc.setTextColor(25, 28, 29); // back to dark
+            return { doc, y: 30 };
         }
 
-        // ── Timetable export ─────────────────────────────────────────
+        function sectionTitle(doc, y, text) {
+            doc.setFillColor(225, 224, 255); // primary-fixed
+            doc.rect(10, y - 4, 190, 8, 'F');
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(21, 21, 125);
+            doc.text(text, 14, y + 1);
+            doc.setTextColor(25, 28, 29);
+            return y + 10;
+        }
+
+        function savePDF(doc, filename) {
+            doc.save(filename);
+            showToast('✅ PDF saved: ' + filename);
+        }
+
+        // ── Timetable PDF ─────────────────────────────────────────────
         function exportTimetable() {
             const classes = TimetableManager.getClasses();
-            if (!classes.length) { alert('No classes added yet.'); return; }
+            if (!classes.length) { showToast('No classes added yet.'); return; }
 
-            let rows = DAYS.map(day => {
-                const dayClasses = classes
+            const { doc, y } = newDoc('Weekly Timetable');
+
+            const rows = [];
+            DAYS.forEach(day => {
+                classes
                     .filter(c => c.day === day)
-                    .sort((a,b) => a.startTime.localeCompare(b.startTime));
-                if (!dayClasses.length) return '';
-                return dayClasses.map(c => `
-                    <tr>
-                        <td style="padding:8px 10px;font-weight:700;color:#15157d;border-bottom:1px solid #e1e3e4">${c.day}</td>
-                        <td style="padding:8px 10px;border-bottom:1px solid #e1e3e4">${c.subject}</td>
-                        <td style="padding:8px 10px;color:#464652;border-bottom:1px solid #e1e3e4">${c.startTime}</td>
-                        <td style="padding:8px 10px;color:#464652;border-bottom:1px solid #e1e3e4">${c.endTime}</td>
-                    </tr>`).join('');
-            }).join('');
+                    .sort((a,b) => a.startTime.localeCompare(b.startTime))
+                    .forEach(c => rows.push([c.day, c.subject, c.startTime, c.endTime]));
+            });
 
-            printHTML(`
-                ${headerBlock('Weekly Timetable')}
-                <table style="width:100%;border-collapse:collapse;font-family:sans-serif;font-size:13px;">
-                    <thead>
-                        <tr style="background:#15157d;color:#fff;">
-                            <th style="padding:10px;text-align:left">Day</th>
-                            <th style="padding:10px;text-align:left">Subject</th>
-                            <th style="padding:10px;text-align:left">Start</th>
-                            <th style="padding:10px;text-align:left">End</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                </table>`);
+            doc.autoTable({
+                startY: y,
+                head: [['Day', 'Subject', 'Start Time', 'End Time']],
+                body: rows,
+                headStyles: { fillColor: [21, 21, 125], textColor: 255, fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [248, 249, 250] },
+                styles: { fontSize: 10, cellPadding: 4 },
+                columnStyles: { 0: { fontStyle: 'bold', cellWidth: 20 }, 1: { cellWidth: 70 } }
+            });
+
+            savePDF(doc, 'TimeFlow_Timetable.pdf');
         }
 
-        // ── Attendance export ─────────────────────────────────────────
+        // ── Attendance PDF ────────────────────────────────────────────
         function exportAttendance() {
             const attendance = AttendanceManager.getAttendance();
-            if (!attendance.length) { alert('No attendance data yet.'); return; }
+            if (!attendance.length) { showToast('No attendance data yet.'); return; }
 
-            const rows = attendance.map(a => {
-                const pct    = a.total > 0 ? Math.round((a.attended / a.total) * 100) : 0;
-                const status = pct >= a.required ? '✅ Safe' : '🚨 At Risk';
-                const color  = pct >= a.required ? '#00473b' : '#ba1a1a';
-                return `
-                <tr>
-                    <td style="padding:8px 10px;font-weight:700;border-bottom:1px solid #e1e3e4">${a.subject}</td>
-                    <td style="padding:8px 10px;border-bottom:1px solid #e1e3e4;text-align:center">${a.attended}</td>
-                    <td style="padding:8px 10px;border-bottom:1px solid #e1e3e4;text-align:center">${a.total}</td>
-                    <td style="padding:8px 10px;border-bottom:1px solid #e1e3e4;text-align:center;font-weight:700;color:${color}">${pct}%</td>
-                    <td style="padding:8px 10px;border-bottom:1px solid #e1e3e4;text-align:center">${a.required}%</td>
-                    <td style="padding:8px 10px;border-bottom:1px solid #e1e3e4;color:${color};font-weight:700">${status}</td>
-                </tr>`;
-            }).join('');
+            const { doc, y } = newDoc('Attendance Report');
 
             const totalAttended = attendance.reduce((s,a) => s + a.attended, 0);
             const totalHeld     = attendance.reduce((s,a) => s + a.total, 0);
             const overallPct    = totalHeld > 0 ? Math.round((totalAttended / totalHeld) * 100) : 0;
 
-            printHTML(`
-                ${headerBlock('Attendance Report')}
-                <p style="font-size:13px;margin-bottom:16px;color:#464652">Overall: <strong>${totalAttended}/${totalHeld} classes (${overallPct}%)</strong></p>
-                <table style="width:100%;border-collapse:collapse;font-family:sans-serif;font-size:13px;">
-                    <thead>
-                        <tr style="background:#15157d;color:#fff;">
-                            <th style="padding:10px;text-align:left">Subject</th>
-                            <th style="padding:10px;text-align:center">Attended</th>
-                            <th style="padding:10px;text-align:center">Total</th>
-                            <th style="padding:10px;text-align:center">%</th>
-                            <th style="padding:10px;text-align:center">Min Req</th>
-                            <th style="padding:10px;text-align:left">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                </table>`);
+            // Overall summary line
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Overall: ${totalAttended}/${totalHeld} classes attended (${overallPct}%)`, 14, y);
+
+            const rows = attendance.map(a => {
+                const pct      = a.total > 0 ? Math.round((a.attended / a.total) * 100) : 0;
+                const req      = a.required;
+                const isSafe   = pct >= req;
+                // Safe bunk calc
+                const canBunk  = isSafe ? Math.max(0, Math.floor(a.attended / (req/100)) - a.total) : 0;
+                const status   = isSafe ? (canBunk > 0 ? `Safe (${canBunk} bunks left)` : 'Safe (no buffer)') : 'At Risk';
+                return [a.subject, a.attended, a.total, pct + '%', req + '%', status];
+            });
+
+            doc.autoTable({
+                startY: y + 8,
+                head: [['Subject', 'Attended', 'Total', 'Current %', 'Min Required', 'Status']],
+                body: rows,
+                headStyles: { fillColor: [0, 89, 187], textColor: 255, fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [248, 249, 250] },
+                styles: { fontSize: 9, cellPadding: 3 },
+                columnStyles: { 0: { fontStyle: 'bold', cellWidth: 55 } },
+                didParseCell: (data) => {
+                    if (data.section === 'body' && data.column.index === 5) {
+                        const v = data.cell.raw;
+                        if (v.startsWith('At Risk')) {
+                            data.cell.styles.textColor = [186, 26, 26];
+                            data.cell.styles.fontStyle = 'bold';
+                        } else {
+                            data.cell.styles.textColor = [0, 71, 59];
+                        }
+                    }
+                }
+            });
+
+            savePDF(doc, 'TimeFlow_Attendance.pdf');
         }
 
-        // ── Notes export ─────────────────────────────────────────────
+        // ── Notes PDF ─────────────────────────────────────────────────
         function exportNotes() {
             const folders = NotesManager.getFolders();
-            if (!folders.length) { alert('No notes added yet.'); return; }
+            if (!folders.length) { showToast('No notes added yet.'); return; }
 
-            const content = folders.map(f => {
-                const notes = f.notes.map(n => `
-                    <div style="margin-bottom:12px;padding:10px;border:1px solid #e1e3e4;border-radius:8px;">
-                        <p style="font-weight:700;margin:0 0 4px;font-size:13px">${n.title}</p>
-                        <p style="margin:0;font-size:12px;color:#464652;white-space:pre-wrap">${n.content}</p>
-                        <p style="margin:4px 0 0;font-size:10px;color:#777683">${n.updatedTime}</p>
-                    </div>`).join('');
-                return `
-                    <div style="margin-bottom:20px;">
-                        <h3 style="font-size:16px;font-weight:700;color:#15157d;border-bottom:1px solid #c7c5d4;padding-bottom:4px;margin-bottom:10px">
-                            📁 ${f.name} (${f.notes.length} notes)
-                        </h3>
-                        ${notes || '<p style="font-size:12px;color:#777683">No notes in this folder.</p>'}
-                    </div>`;
-            }).join('');
+            const { doc } = newDoc('Notes');
+            let y = 30;
+            const pageH  = 280;
+            const margin = 14;
+            const maxW   = 182;
 
-            printHTML(`${headerBlock('Notes')}${content}`);
+            folders.forEach(folder => {
+                // Folder header
+                if (y > pageH - 20) { doc.addPage(); y = 20; }
+                y = sectionTitle(doc, y, '📁 ' + folder.name + ' (' + folder.notes.length + ' notes)');
+
+                if (folder.notes.length === 0) {
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'italic');
+                    doc.setTextColor(119, 118, 131);
+                    doc.text('No notes in this folder.', margin, y);
+                    doc.setTextColor(25, 28, 29);
+                    y += 8;
+                    return;
+                }
+
+                folder.notes.forEach(note => {
+                    if (y > pageH - 20) { doc.addPage(); y = 20; }
+
+                    // Note title
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(21, 21, 125);
+                    doc.text(note.title, margin, y);
+                    y += 5;
+
+                    // Note content — wrap long text
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(70, 70, 82);
+                    const lines = doc.splitTextToSize(note.content || '', maxW);
+                    lines.forEach(line => {
+                        if (y > pageH - 10) { doc.addPage(); y = 20; }
+                        doc.text(line, margin + 4, y);
+                        y += 4.5;
+                    });
+
+                    // Timestamp
+                    doc.setFontSize(7.5);
+                    doc.setTextColor(119, 118, 131);
+                    doc.text('Updated: ' + (note.updatedTime || ''), margin + 4, y);
+                    y += 8;
+                    doc.setTextColor(25, 28, 29);
+                });
+
+                y += 4;
+            });
+
+            savePDF(doc, 'TimeFlow_Notes.pdf');
         }
 
-        // ── Full report ───────────────────────────────────────────────
+        // ── Full report PDF ───────────────────────────────────────────
         function exportAll() {
             const classes    = TimetableManager.getClasses();
             const attendance = AttendanceManager.getAttendance();
             const folders    = NotesManager.getFolders();
 
-            // Timetable table
-            let ttRows = DAYS.flatMap(day =>
-                classes.filter(c => c.day === day)
-                       .sort((a,b) => a.startTime.localeCompare(b.startTime))
-                       .map(c => `<tr>
-                            <td style="padding:6px 8px;font-weight:700;border-bottom:1px solid #e1e3e4">${c.day}</td>
-                            <td style="padding:6px 8px;border-bottom:1px solid #e1e3e4">${c.subject}</td>
-                            <td style="padding:6px 8px;color:#464652;border-bottom:1px solid #e1e3e4">${c.startTime} – ${c.endTime}</td>
-                        </tr>`)
-            ).join('');
+            const { doc } = newDoc('Full Academic Report');
+            let y = 30;
+            const pageH  = 280;
+            const margin = 14;
+            const maxW   = 182;
 
-            // Attendance table
-            let attRows = attendance.map(a => {
-                const pct   = a.total > 0 ? Math.round((a.attended / a.total) * 100) : 0;
-                const color = pct >= a.required ? '#00473b' : '#ba1a1a';
-                return `<tr>
-                    <td style="padding:6px 8px;font-weight:700;border-bottom:1px solid #e1e3e4">${a.subject}</td>
-                    <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #e1e3e4">${a.attended}/${a.total}</td>
-                    <td style="padding:6px 8px;text-align:center;font-weight:700;color:${color};border-bottom:1px solid #e1e3e4">${pct}%</td>
-                    <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #e1e3e4">${a.required}%</td>
-                </tr>`;
-            }).join('');
+            // ── Section 1: Timetable ──────────────────────────────────
+            y = sectionTitle(doc, y, '1.  Weekly Timetable');
+            if (classes.length === 0) {
+                doc.setFontSize(9); doc.setTextColor(119,118,131);
+                doc.text('No classes added.', margin, y); y += 10;
+                doc.setTextColor(25,28,29);
+            } else {
+                const ttRows = [];
+                DAYS.forEach(day => {
+                    classes.filter(c => c.day === day)
+                           .sort((a,b) => a.startTime.localeCompare(b.startTime))
+                           .forEach(c => ttRows.push([c.day, c.subject, c.startTime, c.endTime]));
+                });
+                doc.autoTable({
+                    startY: y,
+                    head: [['Day', 'Subject', 'Start', 'End']],
+                    body: ttRows,
+                    headStyles: { fillColor: [21,21,125], textColor: 255, fontStyle: 'bold', fontSize: 9 },
+                    alternateRowStyles: { fillColor: [248,249,250] },
+                    styles: { fontSize: 9, cellPadding: 3 },
+                    columnStyles: { 0:{ fontStyle:'bold', cellWidth:18 }, 1:{ cellWidth:70 } },
+                    margin: { left: margin, right: margin }
+                });
+                y = doc.lastAutoTable.finalY + 10;
+            }
 
-            // Notes summary
-            const notesSummary = folders.map(f =>
-                `<div style="margin-bottom:14px">
-                    <p style="font-weight:700;color:#15157d;margin:0 0 4px">📁 ${f.name}</p>
-                    ${f.notes.map(n => `<p style="margin:2px 0 2px 12px;font-size:12px">• <strong>${n.title}</strong>: ${n.content.substring(0,80)}${n.content.length>80?'...':''}</p>`).join('')}
-                </div>`
-            ).join('');
+            // ── Section 2: Attendance ─────────────────────────────────
+            if (y > pageH - 40) { doc.addPage(); y = 20; }
+            y = sectionTitle(doc, y, '2.  Attendance Report');
 
-            const sectionHdr = (t) => `<h2 style="font-size:16px;font-weight:800;color:#15157d;margin:24px 0 10px;border-bottom:2px solid #e1e0ff;padding-bottom:4px">${t}</h2>`;
-            const thStyle    = 'padding:8px;text-align:left;background:#15157d;color:#fff;font-size:12px';
+            if (attendance.length === 0) {
+                doc.setFontSize(9); doc.setTextColor(119,118,131);
+                doc.text('No attendance logged.', margin, y); y += 10;
+                doc.setTextColor(25,28,29);
+            } else {
+                const attRows = attendance.map(a => {
+                    const pct    = a.total > 0 ? Math.round((a.attended / a.total) * 100) : 0;
+                    const status = pct >= a.required ? 'Safe' : 'At Risk';
+                    return [a.subject, a.attended + '/' + a.total, pct + '%', a.required + '%', status];
+                });
+                doc.autoTable({
+                    startY: y,
+                    head: [['Subject', 'Attended', '%', 'Min', 'Status']],
+                    body: attRows,
+                    headStyles: { fillColor: [0,89,187], textColor: 255, fontStyle: 'bold', fontSize: 9 },
+                    alternateRowStyles: { fillColor: [248,249,250] },
+                    styles: { fontSize: 9, cellPadding: 3 },
+                    columnStyles: { 0:{ fontStyle:'bold', cellWidth:60 } },
+                    margin: { left: margin, right: margin },
+                    didParseCell: (data) => {
+                        if (data.section === 'body' && data.column.index === 4) {
+                            data.cell.styles.textColor = data.cell.raw === 'At Risk' ? [186,26,26] : [0,71,59];
+                            data.cell.styles.fontStyle = 'bold';
+                        }
+                    }
+                });
+                y = doc.lastAutoTable.finalY + 10;
+            }
 
-            printHTML(`
-                ${headerBlock('Full Academic Report')}
-                ${sectionHdr('📅 Timetable')}
-                <table style="width:100%;border-collapse:collapse;font-size:12px;">
-                    <thead><tr><th style="${thStyle}">Day</th><th style="${thStyle}">Subject</th><th style="${thStyle}">Time</th></tr></thead>
-                    <tbody>${ttRows || '<tr><td colspan="3" style="padding:8px;color:#777683">No classes added.</td></tr>'}</tbody>
-                </table>
-                ${sectionHdr('📊 Attendance Report')}
-                <table style="width:100%;border-collapse:collapse;font-size:12px;">
-                    <thead><tr><th style="${thStyle}">Subject</th><th style="${thStyle};text-align:center">Attended</th><th style="${thStyle};text-align:center">%</th><th style="${thStyle};text-align:center">Min</th></tr></thead>
-                    <tbody>${attRows || '<tr><td colspan="4" style="padding:8px;color:#777683">No attendance logged.</td></tr>'}</tbody>
-                </table>
-                ${sectionHdr('📝 Notes Summary')}
-                ${notesSummary || '<p style="font-size:12px;color:#777683">No notes added.</p>'}
-            `);
+            // ── Section 3: Notes ──────────────────────────────────────
+            if (y > pageH - 30) { doc.addPage(); y = 20; }
+            y = sectionTitle(doc, y, '3.  Notes Summary');
+
+            if (!folders.length) {
+                doc.setFontSize(9); doc.setTextColor(119,118,131);
+                doc.text('No notes added.', margin, y);
+                doc.setTextColor(25,28,29);
+            } else {
+                folders.forEach(folder => {
+                    if (y > pageH - 20) { doc.addPage(); y = 20; }
+                    doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(21,21,125);
+                    doc.text('📁 ' + folder.name, margin, y); y += 5;
+                    doc.setTextColor(25,28,29);
+
+                    folder.notes.forEach(note => {
+                        if (y > pageH - 12) { doc.addPage(); y = 20; }
+                        doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+                        doc.text('• ' + note.title, margin + 4, y); y += 4.5;
+                        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+                        doc.setTextColor(70,70,82);
+                        const preview = (note.content || '').substring(0, 120) + (note.content?.length > 120 ? '...' : '');
+                        const lines   = doc.splitTextToSize(preview, maxW - 8);
+                        lines.forEach(l => {
+                            if (y > pageH - 8) { doc.addPage(); y = 20; }
+                            doc.text(l, margin + 8, y); y += 4;
+                        });
+                        doc.setTextColor(25,28,29);
+                        y += 2;
+                    });
+                    y += 4;
+                });
+            }
+
+            savePDF(doc, 'TimeFlow_FullReport.pdf');
         }
     </script>
 </body>
