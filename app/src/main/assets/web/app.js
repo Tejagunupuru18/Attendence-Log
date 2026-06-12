@@ -184,8 +184,16 @@ const SubjectManager = {
         return s;
     },
     deleteSubject: (id) => {
-        const subjects = SubjectManager.getSubjects().filter(s => s.id !== id);
-        SubjectManager.saveSubjects(subjects);
+        const subjects = SubjectManager.getSubjects();
+        const subjectToDelete = subjects.find(s => s.id === id);
+        if (subjectToDelete) {
+            const updatedSubjects = subjects.filter(s => s.id !== id);
+            SubjectManager.saveSubjects(updatedSubjects);
+
+            const attendance = AttendanceManager.getAttendance();
+            const updatedAttendance = attendance.filter(a => a.subject.toLowerCase() !== subjectToDelete.name.toLowerCase());
+            AttendanceManager.saveAttendance(updatedAttendance);
+        }
     }
 };
 
