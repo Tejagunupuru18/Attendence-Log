@@ -7,6 +7,7 @@ const DEFAULT_ATTENDANCE = [];
 const DEFAULT_ASSIGNMENTS = [];
 const DEFAULT_GPA = [];
 const DEFAULT_SUBJECTS = [];
+const DEFAULT_LOGS = [];
 
 // Helper functions for reading and writing data
 function getData(key, defaultVal) {
@@ -109,6 +110,7 @@ const AttendanceManager = {
                 record.attended += 1;
             }
             AttendanceManager.saveAttendance(attendance);
+            ActivityLogManager.addLog(record.subject, attendedStatus === "present" ? "Marked Present" : "Marked Absent");
             return record;
         }
         return null;
@@ -122,6 +124,7 @@ const AttendanceManager = {
                 record.attended -= 1;
             }
             AttendanceManager.saveAttendance(attendance);
+            ActivityLogManager.addLog(record.subject, "Reverted Attendance");
             return record;
         }
         return null;
@@ -165,6 +168,36 @@ const GPAManager = {
     }
 };
 
+const ActivityLogManager = {
+    getLogs: () => getData("tf_activity_logs", DEFAULT_LOGS),
+    saveLogs: (logs) => saveData("tf_activity_logs", logs),
+    addLog: (subject, action, details = "") => {
+        const logs = ActivityLogManager.getLogs();
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const timeStr = `${hours}:${minutes} ${ampm}`;
+        
+        const log = {
+            id: "log_" + Date.now() + Math.random(),
+            subject: subject,
+            action: action,
+            timestamp: `${dateStr} · ${timeStr}`,
+            details: details
+        };
+        logs.unshift(log);
+        if (logs.length > 100) logs.pop();
+        ActivityLogManager.saveLogs(logs);
+        return log;
+    },
+    clearLogs: () => {
+        ActivityLogManager.saveLogs(DEFAULT_LOGS);
+    }
+};
+
 const SubjectManager = {
     // { id, name, color, credits }
     getSubjects: () => getData("tf_subjects", DEFAULT_SUBJECTS),
@@ -181,6 +214,7 @@ const SubjectManager = {
             attendance.push({ subject: name, attended: 0, total: 0, required: globalCutoff });
             AttendanceManager.saveAttendance(attendance);
         }
+        ActivityLogManager.addLog(name, "Subject Added");
         return s;
     },
     deleteSubject: (id) => {
@@ -193,6 +227,8 @@ const SubjectManager = {
             const attendance = AttendanceManager.getAttendance();
             const updatedAttendance = attendance.filter(a => a.subject.toLowerCase() !== subjectToDelete.name.toLowerCase());
             AttendanceManager.saveAttendance(updatedAttendance);
+            
+            ActivityLogManager.addLog(subjectToDelete.name, "Subject Deleted");
         }
     }
 };

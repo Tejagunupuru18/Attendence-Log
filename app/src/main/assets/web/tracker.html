@@ -103,6 +103,17 @@
             <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Smart Prediction by Subject</h3>
             <div id="subjects-list" class="space-y-md"></div>
         </section>
+
+        <!-- Activity Log -->
+        <section class="space-y-md pt-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Attendance Activity Log</h3>
+                <button onclick="clearAllActivityLogs()" class="text-error font-label-sm hover:underline">Clear History</button>
+            </div>
+            <div id="logs-list" class="space-y-sm max-h-80 overflow-y-auto pr-1">
+                <!-- Dynamically loaded -->
+            </div>
+        </section>
     </main>
 
     <!-- Cutoff sidebar panel -->
@@ -365,17 +376,73 @@
             document.getElementById('total-pct').innerText  = totalHeld > 0 ? `${totalPct}%` : '--';
             document.getElementById('total-desc').innerText = `${totalAttended} / ${totalHeld} classes attended`;
             document.getElementById('overall-bar').style.width = `${totalPct}%`;
+            renderActivityLogs();
         }
 
         function quickLog(index, type) {
             const attendance = AttendanceManager.getAttendance();
             const sub = attendance[index];
             if (!sub) return;
-            sub.total += 1;
-            if (type === 'present') sub.attended += 1;
-            AttendanceManager.saveAttendance(attendance);
+            AttendanceManager.logAttendance(sub.subject, type);
             StreakManager.logToday();
             loadTracker();
+        }
+
+        function renderActivityLogs() {
+            const logs = ActivityLogManager.getLogs();
+            const list = document.getElementById('logs-list');
+            if (!list) return;
+
+            if (logs.length === 0) {
+                list.innerHTML = `
+                    <div class="bg-surface-container-lowest p-md rounded-xl text-center text-on-surface-variant text-label-sm border border-surface-variant/40">
+                        No activity logged yet
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = logs.map(log => {
+                let badgeColor = 'bg-surface-container text-on-surface-variant';
+                let actionIcon = 'history';
+                
+                if (log.action === 'Marked Present') {
+                    badgeColor = 'bg-tertiary-fixed text-on-tertiary-fixed';
+                    actionIcon = 'check_circle';
+                } else if (log.action === 'Marked Absent') {
+                    badgeColor = 'bg-error-container text-on-error-container';
+                    actionIcon = 'cancel';
+                } else if (log.action === 'Subject Added') {
+                    badgeColor = 'bg-primary-container text-on-primary-container';
+                    actionIcon = 'add_circle';
+                } else if (log.action === 'Subject Deleted') {
+                    badgeColor = 'bg-surface-container-highest text-on-surface';
+                    actionIcon = 'delete';
+                } else if (log.action === 'Reverted Attendance') {
+                    badgeColor = 'bg-secondary-fixed text-on-secondary-fixed';
+                    actionIcon = 'undo';
+                }
+
+                return `
+                <div class="bg-surface-container-lowest rounded-xl p-md flex items-center justify-between border border-surface-variant/40 shadow-sm animate-scaleUp">
+                    <div class="flex items-center gap-md min-w-0">
+                        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${badgeColor}">
+                            <span class="material-symbols-outlined text-[20px]">${actionIcon}</span>
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="font-label-md text-primary font-bold truncate">${log.subject}</h4>
+                            <p class="font-label-sm text-on-surface-variant">${log.action} · ${log.timestamp}</p>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function clearAllActivityLogs() {
+            showConfirm("Clear History", "Are you sure you want to clear all attendance activity logs?", () => {
+                ActivityLogManager.clearLogs();
+                renderActivityLogs();
+                showToast("Activity history cleared");
+            });
         }
 
         window.addEventListener('DOMContentLoaded', () => {
